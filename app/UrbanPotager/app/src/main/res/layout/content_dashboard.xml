@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:materialdesign="http://schemas.android.com/apk/res-auto"
+    style="@style/card.main_layout"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        style="@style/card.title"
+        android:text="Dashboard"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="10sp"
+        android:paddingLeft="16dp"
+        android:layout_gravity="left"
+        android:text="Last sync 18/10/2014 12:35" />
+
+    <FrameLayout
+        android:id="@+id/card_status_content"
+        style="@style/card.content_outer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="16dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <LinearLayout
+                    style="@style/text.duo">
+                    <TextView
+                        style="@style/text.round"
+                        android:text="24°"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Temp"/>
+                </LinearLayout>
+                <LinearLayout
+                    style="@style/text.duo">
+                    <TextView
+                        style="@style/text.round"
+                        android:text="60%"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hum"/>
+                </LinearLayout>
+                <LinearLayout
+                    style="@style/text.duo">
+                    <TextView
+                        style="@style/text.round"
+                        android:text="85%"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Light"/>
+                </LinearLayout>
+                <LinearLayout
+                    style="@style/text.duo">
+                    <ImageView
+                        style="@style/text.round"
+                        android:src="@drawable/ic_emoticon_happy"
+                        android:tint="@color/secondTextColor"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Air"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <com.gc.materialdesign.views.ProgressBarDeterminate
+                android:id="@+id/waterLevel"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="12dp"
+                materialdesign:max="100"
+                materialdesign:min="0"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorAccent"/>
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Water Level (75%)"/>
+
+            <View
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:alpha="0.12"
+                android:background="#000000"/>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                android:gravity="right">
+
+                <com.gc.materialdesign.views.ButtonFlat
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorAccent"
+                    android:text="Update" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </FrameLayout>
+
+</LinearLayout>

@@ -1,0 +1,83 @@
+<resources>
+
+    <!-- Accounts -->
+    <style name="AccountsLight" parent="MaterialNavigationDrawerTheme.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">0.5</item>
+    </style>
+
+    <style name="text.accent">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">0.5</item>
+        <item name="android:textColor">@color/primaryTextColor</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="card.native.header_outer_layout">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:paddingLeft">6dp</item>
+        <item name="android:paddingTop">4dp</item>
+    </style>
+
+    <style name="card.title">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:layout_gravity">left|center_vertical</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingTop">16dp</item>
+    </style>
+
+    <style name="text.round">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/bg_round</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="text.duo">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="fullWidth">
+        <item name="android:layout_margin">1dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:layout_height">56dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:background">@drawable/bg_full_width</item>
+    </style>
+
+    <style name="switchtext">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="switchwithtext">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/colorAccent</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_alignParentRight">true</item>
+    </style>
+</resources>

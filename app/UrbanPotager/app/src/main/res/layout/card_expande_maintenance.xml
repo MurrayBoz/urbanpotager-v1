@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:drawableLeft="@drawable/ic_light"
+            android:text="Lights"
+            style="@style/switchtext"
+            android:id="@+id/maintenance_light_text"/>
+
+        <com.gc.materialdesign.views.CheckBox
+            android:id="@+id/maintenance_light_switch"
+            style="@style/switchwithtext"/>/>
+
+    </RelativeLayout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:drawableLeft="@drawable/ic_water_pump"
+            android:text="Water Pump"
+            android:id="@+id/maintenance_pump_text"
+            style="@style/switchtext"/>
+        <com.gc.materialdesign.views.CheckBox
+            android:id="@+id/maintenance_pump_switch"
+            style="@style/switchwithtext"/>
+    </RelativeLayout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:drawableLeft="@drawable/ic_cleaning"
+            android:text="Cleaning Process"
+            android:id="@+id/maintenance_clean_text"
+            style="@style/switchtext"/>
+        <com.gc.materialdesign.views.CheckBox
+            android:id="@+id/maintenance_clean_switch"
+            style="@style/switchwithtext"/>
+    </RelativeLayout>
+
+</LinearLayout>

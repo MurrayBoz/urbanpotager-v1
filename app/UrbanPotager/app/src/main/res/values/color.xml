@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimaryLight">#C8E6C9</color>
+    <color name="colorPrimary">#4CAF50</color>
+    <color name="colorPrimaryDark">#388E3C</color>
+    <color name="colorAccent">#8BC34A</color>
+    <color name="colorAccentLight">#C5E1A5</color>
+    <color name="textIconPrimaryColor">#FFFFFF</color>
+    <color name="primaryTextColor">#212121</color>
+    <color name="secondTextColor">#727272</color>
+    <color name="dividerColor">#B6B6B6</color>
+    <color name="card_text_color_header">@color/colorPrimary</color>
+    <color name="card_backgroundExpand">@null</color>
+</resources>

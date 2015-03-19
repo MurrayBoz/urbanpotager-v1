@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        style="@style/fullWidth"
+        android:id="@+id/et_watering"
+        android:text="Every 10mn during 30s"
+        android:focusable="false"
+        android:drawableLeft="@drawable/ic_watering"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="1">
+
+        <EditText
+            style="@style/fullWidth"
+            android:id="@+id/et_sunrise"
+            android:text="08:00"
+            android:layout_weight="0.5"
+            android:focusable="false"
+            android:drawableLeft="@drawable/ic_sunrise"/>
+
+        <EditText
+            style="@style/fullWidth"
+            android:id="@+id/et_sunset"
+            android:text="22:00"
+            android:layout_weight="0.5"
+            android:focusable="false"
+            android:drawableLeft="@drawable/ic_sunset"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="1">
+
+        <EditText
+            style="@style/fullWidth"
+            android:id="@+id/et_temp_min"
+            android:text="17"
+            android:layout_weight="0.5"
+            android:inputType="number"
+            android:maxLength="2"
+            android:drawableLeft="@drawable/ic_max_temp"/>
+
+        <EditText
+            style="@style/fullWidth"
+            android:id="@+id/et_temp_max"
+            android:text="28"
+            android:inputType="number"
+            android:maxLength="2"
+            android:layout_weight="0.5"
+            android:drawableLeft="@drawable/ic_min_temp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="1">
+
+        <EditText
+            style="@style/fullWidth"
+            android:id="@+id/et_water_min"
+            android:text="10"
+            android:inputType="number"
+            android:maxLength="2"
+            android:layout_weight="0.5"
+            android:drawableLeft="@drawable/ic_water_level_min"/>
+
+        <EditText
+            style="@style/fullWidth"
+            android:id="@+id/et_water_alert"
+            android:text="30"
+            android:inputType="number"
+            android:maxLength="2"
+            android:layout_weight="0.5"
+            android:drawableLeft="@drawable/ic_alert"/>
+
+    </LinearLayout>
+
+</LinearLayout>

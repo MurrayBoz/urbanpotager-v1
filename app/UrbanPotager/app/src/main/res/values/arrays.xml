@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="items" >
+        <item>Every 10mn during 10sec</item>
+        <item>Every 20mn during 10sec</item>
+        <item>Every 10mn during 20sec</item>
+        <item>Every 20mn during 20sec</item>
+    </string-array>
+</resources>

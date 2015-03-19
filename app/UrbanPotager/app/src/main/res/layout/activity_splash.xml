@@ -1,0 +1,23 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    tools:context="com.urbanaplant.android.urbanpotager.SplashActivity">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/ic_splash" />
+
+    <com.gc.materialdesign.views.ProgressBarCircularIndeterminate
+        android:layout_below="@+id/imageView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="47dp"
+        android:id="@+id/progressBarCircularIndeterminate"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="#81BE5D" />
+</RelativeLayout>

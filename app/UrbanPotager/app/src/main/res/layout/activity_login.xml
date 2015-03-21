@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:padding="16dp">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/img_logo"/>
+
+
+    <LinearLayout
+        android:layout_marginTop="25dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_panel"
+        android:padding="16dp">
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Username or Email address"
+            android:textSize="15sp"
+            app:met_baseColor="#000000"
+            app:met_floatingLabel="highlight"
+            app:met_primaryColor="?colorAccent"/>
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:textSize="15sp"
+            app:met_baseColor="#000000"
+            app:met_floatingLabel="highlight"
+            app:met_primaryColor="?colorAccent"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <Button
+                android:layout_marginRight="5dp"
+                android:layout_weight="0.5"
+                android:layout_marginTop="16dp"
+                android:id="@+id/createAccount"
+                android:paddingLeft="16dp"
+                android:textColor="@color/colorPrimary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:background="@drawable/bg_input"
+                android:text="Inscription"
+                android:drawableLeft="@drawable/ic_connect"/>
+
+            <Button
+                android:layout_marginLeft="5dp"
+                android:layout_weight="0.5"
+                android:layout_marginTop="16dp"
+                android:id="@+id/connectAccount"
+                android:paddingLeft="16dp"
+                android:textColor="#FFFFFF"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:background="@color/colorPrimary"
+                android:text="Connexion"
+                android:drawableLeft="@drawable/ic_create"/>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_forgotten"
+            android:layout_gravity="right"
+            android:padding="0dp"
+            android:background="@null"
+            android:textSize="12sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/secondTextColor"
+            android:textAllCaps="true"
+            android:text="Forgotten password?"/>
+
+        <RelativeLayout
+            android:layout_marginBottom="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#32000000"
+                android:layout_centerVertical="true"/>
+
+            <TextView
+                android:padding="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textSize="13dp"
+                android:textColor="#32000000"
+                android:text="Or connect with"
+                android:background="#FFFFFF"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <Button
+                android:layout_marginRight="5dp"
+                android:layout_weight="0.5"
+                android:id="@+id/googlePlus"
+                android:paddingLeft="16dp"
+                android:textColor="#FFFFFF"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:background="@color/googleColor"
+                android:text="Google"
+                android:drawableLeft="@drawable/ic_google_plus"/>
+
+            <Button
+                android:layout_marginLeft="5dp"
+                android:layout_weight="0.5"
+                android:id="@+id/facebook"
+                android:paddingLeft="16dp"
+                android:textColor="#FFFFFF"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:background="@color/facebookColor"
+                android:text="Facebook"
+                android:drawableLeft="@drawable/ic_facebook"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

@@ -1,12 +1,7 @@
 package com.urbanaplant.android.urbanpotager.fragments;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -15,21 +10,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ScrollView;
-import android.widget.SeekBar;
 import android.widget.TimePicker;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gc.materialdesign.views.Switch;
-import com.urbanaplant.android.urbanpotager.MainActivity;
 import com.urbanaplant.android.urbanpotager.R;
-import com.urbanaplant.android.urbanpotager.SplashActivity;
 import com.urbanaplant.android.urbanpotager.customViews.CustomCardSettings;
 import com.urbanaplant.android.urbanpotager.customViews.CustomExpandCardMaintenance;
 import com.urbanaplant.android.urbanpotager.customViews.CustomHeader;
 import com.urbanaplant.android.urbanpotager.customViews.CustomHeaderSwitch;
 import com.urbanaplant.android.urbanpotager.customViews.MyFragment;
 import com.urbanaplant.android.urbanpotager.listeners.OnFragmentInteractionListener;
-import com.urbanaplant.android.urbanpotager.util.Tools;
 
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardExpand;

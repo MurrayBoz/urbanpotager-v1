@@ -12,5 +12,7 @@
     <color name="card_text_color_header">@color/colorPrimary</color>
     <color name="card_backgroundExpand">@null</color>
     <color name="googleColor">#dd4b39</color>
+    <color name="googleColorDark">#BB2D1A</color>
     <color name="facebookColor">#3b5998</color>
+    <color name="facebookColorDark">#224389</color>
 </resources>

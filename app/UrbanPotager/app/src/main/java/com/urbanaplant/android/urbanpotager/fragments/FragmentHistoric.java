@@ -1,17 +1,26 @@
 package com.urbanaplant.android.urbanpotager.fragments;
 
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.gc.materialdesign.views.ProgressBarDeterminate;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.Highlight;
 import com.urbanaplant.android.urbanpotager.R;
 import com.urbanaplant.android.urbanpotager.customViews.MyFragment;
 import com.urbanaplant.android.urbanpotager.listeners.OnFragmentInteractionListener;
@@ -21,9 +30,22 @@ import java.util.ArrayList;
 /**
  * Created by Tatiana Grange on 17/02/2015.
  */
-public class FragmentHistoric extends MyFragment {
+public class FragmentHistoric extends MyFragment implements OnChartValueSelectedListener {
 
     private LineChart mChart;
+    private int year = 15;
+    Handler mHandler = new Handler();
+
+    protected String[] mMonths = new String[] {
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"
+    };
+
+    protected String[] mParties = new String[] {
+            "Party A", "Party B", "Party C", "Party D", "Party E", "Party F", "Party G", "Party H",
+            "Party I", "Party J", "Party K", "Party L", "Party M", "Party N", "Party O", "Party P",
+            "Party Q", "Party R", "Party S", "Party T", "Party U", "Party V", "Party W", "Party X",
+            "Party Y", "Party Z"
+    };
 
     /* **************************
      * 		Constructors		*
@@ -39,150 +61,141 @@ public class FragmentHistoric extends MyFragment {
     /* **********************
 	 * 		Override		*
 	 ************************/
-
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_historic, container, false);
 
-        mChart = (LineChart) v.findViewById(R.id.chart1);
-        //mChart.setOnChartValueSelectedListener(this);
-        //mChart.setDrawYValues(false);
-        mChart.setDrawGridBackground(false);
+        mChart = (LineChart) v.findViewById(R.id.chart);
+        mChart.setOnChartValueSelectedListener(this);
+
+        // no description text
         mChart.setDescription("");
+        mChart.setNoDataTextDescription("You need to provide data for the chart.");
 
-        addEmptyData();
+        // enable value highlighting
+        mChart.setHighlightEnabled(true);
 
-        mChart.invalidate();
+        // enable touch gestures
+        mChart.setTouchEnabled(true);
 
+        // enable scaling and dragging
+        mChart.setDragEnabled(true);
+        mChart.setScaleEnabled(true);
+        mChart.setDrawGridBackground(false);
+
+        // if disabled, scaling can be done on x- and y-axis separately
+        mChart.setPinchZoom(true);
+
+        LineData data = new LineData();
+        data.setValueTextColor(Color.BLACK);
+
+        // add empty data
+        mChart.setData(data);
+
+        // get the legend (only possible after setting data)
+        Legend l = mChart.getLegend();
+
+        // modify the legend ...
+        // l.setPosition(LegendPosition.LEFT_OF_CHART);
+        l.setForm(Legend.LegendForm.LINE);
+        l.setTextColor(Color.BLACK);
+
+        XAxis xl = mChart.getXAxis();
+        xl.setTextColor(Color.BLACK);
+        xl.setDrawGridLines(false);
+        xl.setAvoidFirstLastClipping(true);
+
+        YAxis leftAxis = mChart.getAxisLeft();
+        leftAxis.setTextColor(Color.BLACK);
+        leftAxis.setAxisMaxValue(120f);
+        leftAxis.setDrawGridLines(true);
+
+        YAxis rightAxis = mChart.getAxisRight();
+        rightAxis.setEnabled(false);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    try {
+                        Thread.sleep(2000);
+                        mHandler.post(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                addEntry();
+                            }
+                        });
+                    } catch (Exception e) {
+                    }
+                }
+            }
+        }).start();
 
         return v;
     }
-
-    int[] mColors = ColorTemplate.VORDIPLOM_COLORS;
 
     private void addEntry() {
 
         LineData data = mChart.getData();
 
-        if(data != null) {
+        if (data != null) {
 
             LineDataSet set = data.getDataSetByIndex(0);
-            // set.addEntry(...);
+            // set.addEntry(...); // can be called as well
 
             if (set == null) {
                 set = createSet();
                 data.addDataSet(set);
             }
 
-            data.addEntry(new Entry((float) (Math.random() * 50) + 50f, set.getEntryCount()), 0);
+            // add a new x-value first
+            data.addXValue(mMonths[data.getXValCount() % 12] + " "
+                    + (year + data.getXValCount() / 12));
+            data.addEntry(new Entry((float) (Math.random() * 40) + 40f, set.getEntryCount()), 0);
 
             // let the chart know it's data has changed
             mChart.notifyDataSetChanged();
 
+            // limit the number of visible entries
+            mChart.setVisibleXRange(6);
+            // mChart.setVisibleYRange(30, AxisDependency.LEFT);
+
+            // move to the latest entry
+            mChart.moveViewToX(data.getXValCount() - 7);
+
+            // this automatically refreshes the chart (calls invalidate())
+            // mChart.moveViewTo(data.getXValCount()-7, 55f,
+            // AxisDependency.LEFT);
+
             // redraw the chart
-            mChart.invalidate();
+            // mChart.invalidate();
         }
     }
-
-    private void removeLastEntry() {
-
-        LineData data = mChart.getData();
-
-        if(data != null) {
-
-            LineDataSet set = data.getDataSetByIndex(0);
-
-            if (set != null) {
-
-                Entry e = set.getEntryForXIndex(set.getEntryCount() - 1);
-
-                data.removeEntry(e, 0);
-                // or remove by index
-                // mData.removeEntry(xIndex, dataSetIndex);
-
-                mChart.notifyDataSetChanged();
-                mChart.invalidate();
-            }
-        }
-    }
-
-    private void addDataSet() {
-
-        LineData data = mChart.getData();
-
-        if(data != null) {
-
-            int count = (data.getDataSetCount() + 1);
-
-            // create 10 y-vals
-            ArrayList<Entry> yVals = new ArrayList<Entry>();
-
-            for (int i = 0; i < data.getXValCount(); i++)
-                yVals.add(new Entry((float) (Math.random() * 50f) + 50f * count, i));
-
-            LineDataSet set = new LineDataSet(yVals, "DataSet " + count);
-            set.setLineWidth(2.5f);
-            set.setCircleSize(4.5f);
-
-            int color = mColors[count % mColors.length];
-
-            set.setColor(color);
-            set.setCircleColor(color);
-            set.setHighLightColor(color);
-
-            data.addDataSet(set);
-            mChart.notifyDataSetChanged();
-            mChart.invalidate();
-        }
-    }
-
-    private void removeDataSet() {
-
-        LineData data = mChart.getData();
-
-        if(data != null) {
-
-            data.removeDataSet(data.getDataSetByIndex(data.getDataSetCount() - 1));
-
-            mChart.notifyDataSetChanged();
-            mChart.invalidate();
-        }
-    }
-
-    private void addEmptyData() {
-
-        // create 30 x-vals
-        String[] xVals = new String[30];
-
-        for (int i = 0; i < 30; i++)
-            xVals[i] = "" + i;
-
-        // create a chartdata object that contains only the x-axis labels (no entries or datasets)
-        LineData data = new LineData(xVals);
-
-        mChart.setData(data);
-        mChart.invalidate();
-    }
-
-//    @Override
-//    public void onValueSelected(Entry e, int dataSetIndex) {
-//        Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
-//    }
-//
-//    @Override
-//    public void onNothingSelected() {
-//
-//    }
 
     private LineDataSet createSet() {
 
-        LineDataSet set = new LineDataSet(null, "DataSet 1");
-        set.setLineWidth(2.5f);
-        set.setCircleSize(4.5f);
-        set.setColor(Color.rgb(240, 99, 99));
-        set.setCircleColor(Color.rgb(240, 99, 99));
-        set.setHighLightColor(Color.rgb(190, 190, 190));
-
+        LineDataSet set = new LineDataSet(null, "Dynamic Data");
+        set.setAxisDependency(YAxis.AxisDependency.LEFT);
+        set.setColor(ColorTemplate.getHoloBlue());
+        set.setCircleColor(ColorTemplate.getHoloBlue());
+        set.setLineWidth(2f);
+        set.setCircleSize(4f);
+        set.setFillAlpha(65);
+        set.setFillColor(ColorTemplate.getHoloBlue());
+        set.setHighLightColor(Color.rgb(244, 117, 117));
+        set.setValueTextColor(Color.BLACK);
+        set.setValueTextSize(10f);
         return set;
+    }
+
+    @Override
+    public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+        Log.i("Entry selected", e.toString());
+    }
+
+    @Override
+    public void onNothingSelected() {
+        Log.i("Nothing selected", "Nothing selected.");
     }
 }

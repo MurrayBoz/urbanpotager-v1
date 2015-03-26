@@ -54,14 +54,12 @@
                 app:rv_color="@color/colorAccent">
                 <Button
                     android:id="@+id/createAccount"
-                    android:paddingLeft="16dp"
                     android:textColor="@color/colorPrimary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:background="@drawable/bg_input"
-                    android:text="Inscription"
-                    android:drawableLeft="@drawable/ic_connect"/>
+                    android:text="Inscription"/>
             </com.andexert.library.RippleView>
 
             <com.andexert.library.RippleView
@@ -73,14 +71,12 @@
                 android:layout_marginTop="16dp">
                 <Button
                     android:id="@+id/connectAccount"
-                    android:paddingLeft="16dp"
                     android:textColor="#FFFFFF"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:background="@color/colorPrimary"
-                    android:text="Connexion"
-                    android:drawableLeft="@drawable/ic_create"/>
+                    android:text="Connexion"/>
             </com.andexert.library.RippleView>
         </LinearLayout>
 

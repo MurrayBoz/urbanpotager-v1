@@ -24,8 +24,6 @@ public class LoginActivity extends ActionBarActivity{
 
         colorDrawableLeft((Button) findViewById(R.id.googlePlus), Color.WHITE);
         colorDrawableLeft((Button) findViewById(R.id.facebook), Color.WHITE);
-        colorDrawableLeft((Button) findViewById(R.id.connectAccount), Color.WHITE);
-        colorDrawableLeft((Button) findViewById(R.id.createAccount), getResources().getColor(R.color.colorPrimary));
 
         findViewById(R.id.connectAccount).setOnClickListener(new View.OnClickListener() {
             @Override

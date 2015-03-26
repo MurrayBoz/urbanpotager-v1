@@ -5,6 +5,7 @@
     tools:context="com.urbanaplant.android.urbanpotager.fragments.FragmentSettings">
 
     <ScrollView
+        android:id="@+id/sv_dasboard"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
         <LinearLayout

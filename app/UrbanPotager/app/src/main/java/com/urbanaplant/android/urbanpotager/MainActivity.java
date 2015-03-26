@@ -2,10 +2,12 @@ package com.urbanaplant.android.urbanpotager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ScrollView;
 
 import com.urbanaplant.android.urbanpotager.activities.Settings;
 import com.urbanaplant.android.urbanpotager.fragments.FragmentDashboard;
@@ -24,6 +26,7 @@ public class MainActivity extends MaterialNavigationDrawer implements MaterialAc
     private MaterialSection settings;
     private MaterialSection dashboard;
     private MaterialSection historic;
+    private final int btn_notif = 100;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,14 +64,28 @@ public class MainActivity extends MaterialNavigationDrawer implements MaterialAc
         // create bottom section
         this.addBottomSection(newSection("App Settings (si besoin?)",R.drawable.ic_app_settings,new Intent(this,Settings.class)));
 
-        enableToolbarElevation();
+
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         menu.clear();
-        menu.add(0, 100, Menu.NONE, "Notifications").setIcon(R.drawable.ic_notif_one).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        menu.add(0, btn_notif, Menu.NONE, "Notifications").setIcon(R.drawable.ic_notif_one).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setSection(dashboard);
+            }
+        }, 400);
+
+
+        return false;
     }
 
     @Override
@@ -87,6 +104,5 @@ public class MainActivity extends MaterialNavigationDrawer implements MaterialAc
 
     @Override
     public void onChangeFragment() {
-
     }
 }

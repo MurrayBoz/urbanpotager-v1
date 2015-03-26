@@ -1,11 +1,10 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.urbanaplant.android.urbanpotager.fragments.FragmentSettings">
+    android:layout_height="match_parent">
 
     <ScrollView
-        android:id="@+id/sv_dasboard"
+        android:id="@+id/sv_potager"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
         <LinearLayout
@@ -25,12 +24,12 @@
                 android:layout_marginTop="12dp"/>
 
             <it.gmariotti.cardslib.library.view.CardViewNative
-                android:id="@+id/card_status"
+                android:id="@+id/card_next_action"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
                 android:layout_marginRight="12dp"
-                card:card_layout_resourceID="@layout/content_status"
+                card:card_layout_resourceID="@layout/content_next_action"
                 android:layout_marginTop="12dp"/>
 
         </LinearLayout>

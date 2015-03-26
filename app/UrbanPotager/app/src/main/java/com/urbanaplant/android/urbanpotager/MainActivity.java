@@ -4,13 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ScrollView;
 
 import com.urbanaplant.android.urbanpotager.activities.Settings;
-import com.urbanaplant.android.urbanpotager.fragments.FragmentDashboard;
+import com.urbanaplant.android.urbanpotager.fragments.FragmentMyPotager;
 import com.urbanaplant.android.urbanpotager.fragments.FragmentHistoric;
 import com.urbanaplant.android.urbanpotager.fragments.FragmentSettings;
 import com.urbanaplant.android.urbanpotager.listeners.OnFragmentInteractionListener;
@@ -24,7 +22,7 @@ import it.neokree.materialnavigationdrawer.elements.listeners.MaterialAccountLis
 public class MainActivity extends MaterialNavigationDrawer implements MaterialAccountListener, View.OnSystemUiVisibilityChangeListener, OnFragmentInteractionListener {
 
     private MaterialSection settings;
-    private MaterialSection dashboard;
+    private MaterialSection myPotager;
     private MaterialSection historic;
     private final int btn_notif = 100;
 
@@ -52,11 +50,11 @@ public class MainActivity extends MaterialNavigationDrawer implements MaterialAc
 
         // create sections
         settings = newSection("Settings", R.drawable.ic_settings_black_24dp, FragmentSettings.newInstance(this));
-        dashboard = newSection("Dashboard", R.drawable.ic_dashboard, FragmentDashboard.newInstance(this));
-        dashboard.setTitle("My Potager");
+        myPotager = newSection("Dashboard", R.drawable.ic_dashboard, FragmentMyPotager.newInstance(this));
+        myPotager.setTitle("My Potager");
         historic = newSection("Historic", R.drawable.ic_stats, FragmentHistoric.newInstance(this));
 
-        this.addSection(dashboard);
+        this.addSection(myPotager);
         this.addSection(historic);
         this.addSection(settings);
 
@@ -80,7 +78,7 @@ public class MainActivity extends MaterialNavigationDrawer implements MaterialAc
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                setSection(dashboard);
+                setSection(myPotager);
             }
         }, 400);
 
@@ -95,7 +93,7 @@ public class MainActivity extends MaterialNavigationDrawer implements MaterialAc
 
     @Override
     public void onChangeAccount(MaterialAccount newAccount) {
-        this.setSection(dashboard);
+        this.setSection(myPotager);
     }
 
     @Override

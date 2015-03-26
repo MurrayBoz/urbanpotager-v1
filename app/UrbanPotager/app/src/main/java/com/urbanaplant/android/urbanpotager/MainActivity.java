@@ -2,6 +2,9 @@ package com.urbanaplant.android.urbanpotager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.urbanaplant.android.urbanpotager.activities.Settings;
@@ -35,10 +38,10 @@ public class MainActivity extends MaterialNavigationDrawer implements MaterialAc
         allowArrowAnimation();
 
         // add accounts
-        MaterialAccount account = new MaterialAccount(this.getResources(),"Au travail","3 semaines d'autonomie",R.drawable.photo, R.drawable.wallpaper1);
+        MaterialAccount account = new MaterialAccount(this.getResources(),"At Work","Water for 3 weeks",R.drawable.ic_home, R.drawable.wallpaper1);
         this.addAccount(account);
 
-        MaterialAccount account2 = new MaterialAccount(this.getResources(),"Chez moi","À besoin d'eau",R.drawable.wallpaper2,R.drawable.wallpaper3);
+        MaterialAccount account2 = new MaterialAccount(this.getResources(),"At Home","Need water",R.drawable.ic_work,R.drawable.wallpaper3);
         this.addAccount(account2);
 
         // set listener
@@ -56,7 +59,16 @@ public class MainActivity extends MaterialNavigationDrawer implements MaterialAc
 
 
         // create bottom section
-        this.addBottomSection(newSection("App Settings (si besoin?)",R.drawable.ic_settings_black_24dp,new Intent(this,Settings.class)));
+        this.addBottomSection(newSection("App Settings (si besoin?)",R.drawable.ic_app_settings,new Intent(this,Settings.class)));
+
+        enableToolbarElevation();
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.clear();
+        menu.add(0, 100, Menu.NONE, "Notifications").setIcon(R.drawable.ic_notif_one).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override

@@ -50,9 +50,9 @@ public class CustomExpandCardMaintenance extends CardExpand implements CheckBox.
             cb_lights.setChecked(false);
             cb_water.setChecked(false);
         }
-        
-        cb_lights.setEnabled(!b);
-        cb_water.setEnabled(!b);
+
+        /*cb_lights.setEnabled(!b);
+        cb_water.setEnabled(!b);*/
 
     }
 }

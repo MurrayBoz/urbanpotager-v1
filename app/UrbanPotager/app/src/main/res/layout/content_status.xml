@@ -8,7 +8,8 @@
 
     <TextView
         style="@style/card.title"
-        android:text="Status"/>
+        android:text="Next Action"
+        android:drawableLeft="@drawable/ic_dashboard_next"/>
 
     <FrameLayout
         android:id="@+id/card_status_content"
@@ -31,12 +32,12 @@
 
                     <TextView
                         style="@style/text"
-                        android:text="Next watering in"/>
+                        android:text="Add nutrients in"/>
 
 
                     <TextView
                         style="@style/text.accent"
-                        android:text="10mn"/>
+                        android:text="4 days"/>
                 </TableRow>
 
                 <TableRow
@@ -45,76 +46,15 @@
 
                     <TextView
                         style="@style/text"
-                        android:text="Additional light"/>
+                        android:text="Next tank refill in"/>
 
 
                     <TextView
                         style="@style/text.accent"
-                        android:text="ON"/>
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent">
-
-                    <TextView
-                        style="@style/text"
-                        android:text="Temperature is"/>
-
-
-                    <TextView
-                        style="@style/text.accent"
-                        android:text="OK"/>
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent">
-
-                    <TextView
-                        style="@style/text"
-                        android:text="Humidity is"/>
-
-
-                    <TextView
-                        style="@style/text.accent"
-                        android:text="OK"/>
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent">
-
-                    <TextView
-                        style="@style/text"
-                        android:text="Air quality is"/>
-
-                    <TextView
-                        style="@style/text.accent"
-                        android:text="GOOD"/>
+                        android:text="3 weeks"/>
                 </TableRow>
             </TableLayout>
-
-            <View
-                android:layout_marginBottom="10dp"
-                android:layout_width="fill_parent"
-                android:layout_height="1dp"
-                android:alpha="0.12"
-                android:background="#000000"/>
-
-            <com.gc.materialdesign.views.ButtonFlat
-                android:id="@+id/buttonflat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/colorAccent"
-                android:text="Settings"
-                android:layout_gravity="right"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="10dp"/>
-
         </LinearLayout>
-
-
     </FrameLayout>
 
 </LinearLayout>

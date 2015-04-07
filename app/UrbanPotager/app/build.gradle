@@ -38,6 +38,6 @@ dependencies {
     compile 'com.afollestad:material-dialogs:0.6.3.5'
     compile 'com.nineoldandroids:library:2.4.+'
     compile 'com.github.navasmdc:MaterialDesign:1.+@aar'
-    compile 'com.rengwuxian.materialedittext:library:2.0.0-SNAPSHOT'
+    compile 'com.rengwuxian.materialedittext:library:2.0.3'
     compile 'com.github.traex.rippleeffect:library:1.2.4'
 }

@@ -2,6 +2,7 @@ package com.urbanaplant.android.urbanpotager.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Handler;
@@ -11,14 +12,18 @@ import android.widget.TextView;
 
 import com.urbanaplant.android.urbanpotager.MainActivity;
 import com.urbanaplant.android.urbanpotager.R;
+import com.urbanaplant.android.urbanpotager.listeners.OnBluetooth;
+import com.urbanaplant.android.urbanpotager.util.BluetoothSingleton;
 import com.urbanaplant.android.urbanpotager.util.Tools;
 
 
-public class LoadActivity extends ActionBarActivity {
+public class LoadActivity extends ActionBarActivity implements OnBluetooth {
 
     /** Duration of wait **/
     private final int SPLASH_DISPLAY_LENGTH = 3000;
 
+
+    private String NAME = "MyPotager";
     private TextView tv_state;
 
     @Override
@@ -36,37 +41,60 @@ public class LoadActivity extends ActionBarActivity {
         tv_state = (TextView) findViewById(R.id.tv_state);
         tv_state.setText("Connecting to the server...");
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Tools.hide(findViewById(R.id.progressBarCircularIndeterminate),1500, new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        super.onAnimationEnd(animation);
-                        tv_state.setText("");
-                        Intent mainIntent = new Intent(LoadActivity.this, MainActivity.class);
-                        LoadActivity.this.startActivity(mainIntent);
-                        LoadActivity.this.finish();
-                    }
-                });
-            }
-        }, SPLASH_DISPLAY_LENGTH);
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                Tools.hide(findViewById(R.id.progressBarCircularIndeterminate),1500, new AnimatorListenerAdapter() {
+//                    @Override
+//                    public void onAnimationEnd(Animator animation) {
+//                        super.onAnimationEnd(animation);
+//                        tv_state.setText("");
+//                        Intent mainIntent = new Intent(LoadActivity.this, MainActivity.class);
+//                        LoadActivity.this.startActivity(mainIntent);
+//                        LoadActivity.this.finish();
+//                    }
+//                });
+//            }
+//        }, SPLASH_DISPLAY_LENGTH);
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                tv_state.setText("Retrieving data from your garden...");
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        tv_state.setText("It is almost done!");
-
-                    }
-                }, SPLASH_DISPLAY_LENGTH/2);
-            }
-        }, SPLASH_DISPLAY_LENGTH*2/3);
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                tv_state.setText("Retrieving data from your garden...");
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        tv_state.setText("It is almost done!");
+//
+//                    }
+//                }, SPLASH_DISPLAY_LENGTH/2);
+//            }
+//        }, SPLASH_DISPLAY_LENGTH*2/3);
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        BluetoothSingleton.getInstance().startDetection(this,this);
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        BluetoothSingleton.getInstance().stopDetection(this);
+    }
+
+    @Override
+    public void onBluetoothDiscovery(BluetoothDevice device) {
+        if(device.getName().equals(NAME)){
+            BluetoothSingleton.getInstance().connectToUrbanPotager(device);
+        }
+    }
+
+    @Override
+    public void onBluetoothRead(final String s) {
+        Tools.log(s);
+        tv_state.setText(s);
+    }
 }

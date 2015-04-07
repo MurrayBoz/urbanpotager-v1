@@ -1,22 +1,29 @@
 package com.urbanaplant.android.urbanpotager.activities;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.urbanaplant.android.urbanpotager.R;
+import com.urbanaplant.android.urbanpotager.listeners.OnBluetooth;
+import com.urbanaplant.android.urbanpotager.util.BluetoothSingleton;
+import com.urbanaplant.android.urbanpotager.util.Tools;
+
+import java.io.IOException;
 
 public class LoginActivity extends ActionBarActivity{
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +40,17 @@ public class LoginActivity extends ActionBarActivity{
                 LoginActivity.this.finish();
             }
         });
+
+//        findViewById(R.id.createAccount).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                try {
+//                    BluetoothSingleton.getInstance().write("test");
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
     }
 
     private void colorDrawableLeft(Button button, int color) {

@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothDevice;
 /**
  * Created by Tatiana Grange on 19/03/2015.
  */
-public interface OnBluetoothDiscovery {
+public interface OnBluetooth {
     public void onBluetoothDiscovery(BluetoothDevice device);
+    public void onBluetoothRead(String s);
 }

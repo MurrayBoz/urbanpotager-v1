@@ -123,5 +123,9 @@ public class FragmentSettings extends MyFragment implements View.OnClickListener
                 }
             }, 400);
         }
+
+        //((MainActivity)getActivity()).doBindService();
+
+
     }
 }

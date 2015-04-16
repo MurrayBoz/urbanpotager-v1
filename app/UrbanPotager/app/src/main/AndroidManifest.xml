@@ -37,6 +37,8 @@
             android:name=".activities.Settings" />
         <activity
             android:name=".activities.LoadActivity"/>
+
+        <service android:name=".communication.BluetoothService"/>
     </application>
 
 </manifest>

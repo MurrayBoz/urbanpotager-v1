@@ -2,28 +2,29 @@ package com.urbanaplant.android.urbanpotager.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Handler;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
 import com.urbanaplant.android.urbanpotager.MainActivity;
 import com.urbanaplant.android.urbanpotager.R;
-import com.urbanaplant.android.urbanpotager.listeners.OnBluetooth;
-import com.urbanaplant.android.urbanpotager.util.BluetoothSingleton;
+import com.urbanaplant.android.urbanpotager.communication.BluetoothService;
+import com.urbanaplant.android.urbanpotager.communication.Protocol;
 import com.urbanaplant.android.urbanpotager.util.Tools;
 
 
-public class LoadActivity extends ActionBarActivity implements OnBluetooth {
+public class LoadActivity extends ActionBarActivity {
 
     /** Duration of wait **/
     private final int SPLASH_DISPLAY_LENGTH = 3000;
 
-
-    private String NAME = "MyPotager";
     private TextView tv_state;
 
     @Override
@@ -39,62 +40,65 @@ public class LoadActivity extends ActionBarActivity implements OnBluetooth {
         }
         ((TextView)findViewById(R.id.tv_version)).setText(versionName);
         tv_state = (TextView) findViewById(R.id.tv_state);
-        tv_state.setText("Connecting to the server...");
+        tv_state.setText("Connecting to Mypotager by Bluetooth...");
 
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                Tools.hide(findViewById(R.id.progressBarCircularIndeterminate),1500, new AnimatorListenerAdapter() {
-//                    @Override
-//                    public void onAnimationEnd(Animator animation) {
-//                        super.onAnimationEnd(animation);
-//                        tv_state.setText("");
-//                        Intent mainIntent = new Intent(LoadActivity.this, MainActivity.class);
-//                        LoadActivity.this.startActivity(mainIntent);
-//                        LoadActivity.this.finish();
-//                    }
-//                });
-//            }
-//        }, SPLASH_DISPLAY_LENGTH);
-
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                tv_state.setText("Retrieving data from your garden...");
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        tv_state.setText("It is almost done!");
-//
-//                    }
-//                }, SPLASH_DISPLAY_LENGTH/2);
-//            }
-//        }, SPLASH_DISPLAY_LENGTH*2/3);
-
+        startService(new Intent(LoadActivity.this, BluetoothService.class));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,new IntentFilter(Protocol.BM_BLUETOOTH));
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        BluetoothSingleton.getInstance().startDetection(this,this);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,new IntentFilter(Protocol.BM_BLUETOOTH));
+    }
+    @Override
+    protected void onStop() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        super.onStop();
     }
 
     @Override
     protected void onDestroy() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
         super.onDestroy();
-        BluetoothSingleton.getInstance().stopDetection(this);
     }
 
-    @Override
-    public void onBluetoothDiscovery(BluetoothDevice device) {
-        if(device.getName().equals(NAME)){
-            BluetoothSingleton.getInstance().connectToUrbanPotager(device);
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int state = intent.getIntExtra("state",Protocol.BM_CONNECT_FAIL);
+            if(state == Protocol.BM_CONNECT_SUCCESS) {
+                tv_state.setText("Connected to My Potager!");
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Tools.hide(findViewById(R.id.progressBarCircularIndeterminate),1500, new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                super.onAnimationEnd(animation);
+                                tv_state.setText("");
+                                Intent mainIntent = new Intent(LoadActivity.this, MainActivity.class);
+                                LoadActivity.this.startActivity(mainIntent);
+                                LoadActivity.this.finish();
+                            }
+                        });
+                    }
+                }, SPLASH_DISPLAY_LENGTH);
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        tv_state.setText("Do some other awesome things...");
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                tv_state.setText("It is almost done!");
+
+                            }
+                        }, SPLASH_DISPLAY_LENGTH/2);
+                    }
+                }, SPLASH_DISPLAY_LENGTH*2/3);
+            }
         }
-    }
-
-    @Override
-    public void onBluetoothRead(final String s) {
-        Tools.log(s);
-        tv_state.setText(s);
-    }
+    };
 }

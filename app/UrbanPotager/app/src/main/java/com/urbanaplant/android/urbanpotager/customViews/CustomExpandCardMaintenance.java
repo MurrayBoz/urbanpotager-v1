@@ -22,7 +22,7 @@ public class CustomExpandCardMaintenance extends CardExpand implements CheckBox.
     private CheckBox cb_cleaning;
 
     //Use your resource ID for your inner layout
-    public CustomExpandCardMaintenance(Context context) {
+        public CustomExpandCardMaintenance(Context context) {
         super(context, R.layout.card_expande_maintenance);
     }
 

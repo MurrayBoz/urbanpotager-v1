@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/UrbanPotager.iml" filepath="$PROJECT_DIR$/UrbanPotager.iml" />
+      <module fileurl="file://$PROJECT_DIR$/UrbanPotagerAndroid.iml" filepath="$PROJECT_DIR$/UrbanPotagerAndroid.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

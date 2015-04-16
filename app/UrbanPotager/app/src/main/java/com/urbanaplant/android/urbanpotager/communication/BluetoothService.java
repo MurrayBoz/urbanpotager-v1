@@ -197,9 +197,9 @@ public class BluetoothService extends Service{
                 }else {
                     NotificationCompat.Builder builder =
                             new NotificationCompat.Builder(getBaseContext())
-                                    .setSmallIcon(R.drawable.ic_dashboard)
-                                    .setContentTitle("My Notification Title")
-                                    .setContentText("Something interesting happened");
+                                    .setSmallIcon(R.drawable.ic_notif)
+                                    .setContentTitle("Your UrbanPotager send you something...")
+                                    .setContentText(readBT);
                     int NOTIFICATION_ID = 12345;
 
                     Intent targetIntent = new Intent(getBaseContext(), MainActivity.class);

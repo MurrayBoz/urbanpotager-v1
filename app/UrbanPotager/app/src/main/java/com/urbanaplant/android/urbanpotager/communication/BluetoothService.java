@@ -34,7 +34,7 @@ import java.nio.charset.Charset;
  */
 public class BluetoothService extends Service{
 //    private final IBinder mBinder = new BluetoothBinder();
-    private String NAME = "MyPotager";
+    private String NAME = "HC-06";
     private BluetoothSocket mSocket;
     private BluetoothAdapter bluetoothAdapter;
     private java.util.UUID UUID;

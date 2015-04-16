@@ -33,7 +33,7 @@ import java.nio.charset.Charset;
  * Created by Tatiana Grange on 07/04/2015.
  */
 public class BluetoothService extends Service{
-//    private final IBinder mBinder = new BluetoothBinder();
+    private final IBinder mBinder = new BluetoothBinder();
     private String NAME = "HC-06";
     private BluetoothSocket mSocket;
     private BluetoothAdapter bluetoothAdapter;
@@ -43,16 +43,16 @@ public class BluetoothService extends Service{
     private InputStream inStream;
     private ConnectTask ct;
 
-//    public class BluetoothBinder extends Binder {
-//        public BluetoothService getService() {
-//            return BluetoothService.this;
-//        }
-//    }
+    public class BluetoothBinder extends Binder {
+        public BluetoothService getService() {
+            return BluetoothService.this;
+        }
+    }
 
     @Override
     public IBinder onBind(Intent intent) {
-//        return mBinder;
-        return null;
+        return mBinder;
+//        return null;
     }
 
     @Override
@@ -94,22 +94,18 @@ public class BluetoothService extends Service{
         String end = "\n";
         StringBuilder curMsg = new StringBuilder();
 
-        Tools.log("Dans read");
         if(inStream.available() > 0) {
             while (-1 != (bytes = inStream.read(buffer))) {
                 curMsg.append(new String(buffer, 0, bytes, Charset.forName("UTF-8")));
-                Tools.log(curMsg.toString());
                 int endIdx = curMsg.indexOf(end);
                 if (endIdx != -1) {
                     String fullMessage = curMsg.substring(0, endIdx + end.length());
                     curMsg.delete(0, endIdx + end.length());
-                    Tools.log(fullMessage);
                     return fullMessage;
                 }
             }
         }
 
-        Tools.log("Après le while");
         return null;
     }
 

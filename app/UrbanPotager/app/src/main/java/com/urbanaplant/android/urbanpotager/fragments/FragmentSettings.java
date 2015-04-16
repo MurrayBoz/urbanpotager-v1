@@ -14,6 +14,7 @@ import android.widget.TimePicker;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gc.materialdesign.views.Switch;
+import com.urbanaplant.android.urbanpotager.MainActivity;
 import com.urbanaplant.android.urbanpotager.R;
 import com.urbanaplant.android.urbanpotager.customViews.CustomCardSettings;
 import com.urbanaplant.android.urbanpotager.customViews.CustomExpandCardMaintenance;
@@ -124,7 +125,7 @@ public class FragmentSettings extends MyFragment implements View.OnClickListener
             }, 400);
         }
 
-        //((MainActivity)getActivity()).doBindService();
+        ((MainActivity)getActivity()).doBindService();
 
 
     }

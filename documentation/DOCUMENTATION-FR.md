@@ -1,7 +1,7 @@
 # UrbanPotager
 UrbanPotager - Potager d'Intétrieur Automatisé et Inteligent
 
-##Présentation du Projet
+##Présentation du Projet UrbanPotager
 ![image presentation](http://doc.faclab.org/wp-content/uploads/2015/01/Banner-1024x398.png)
 
 L’Urban Potager est un projet de jardin d’intérieur automatisé et open-source, développé par UrbanaPlant en partenariat avec le FacLab.

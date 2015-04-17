@@ -1,6 +1,4 @@
-# UrbanPotager
 
-The english documentation is comming
 
 ## Creative Commons
 

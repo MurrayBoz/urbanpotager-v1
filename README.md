@@ -21,4 +21,4 @@ And more to come!
 Please check the [wiki page](https://github.com/UrbanaPlant/urbanpotager/wiki)! And give us some feedback!
 
 
-Visit us for more details: <http://www.urbanpotager.com/?lang=en>
+Visit us for more details: <http://www.urbanpotager.com/>

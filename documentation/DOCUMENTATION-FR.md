@@ -32,7 +32,7 @@ J’ai choisi d’utiliser un Arduino et des capteurs compatibles pour la facili
 ###Liste du Matériel
 La liste du matériel nécessaire est disponible au téléchargement ici: [MicroEdition_v3-Parts-List.xls ](http://www.urbanpotager.com/wp-content/uploads/2015/02/MicroEdition_v3-Parts-List.xls)
 
-La liste du matériel est également disponible ici <https://github.com/UrbanaPlant/urbanpotager/blob/master/object/List.xls>
+La liste du matériel est également disponible ici , sur github: <https://github.com/UrbanaPlant/urbanpotager/blob/master/object/List.xls>
 
 ##Réalisation de la Structure
 

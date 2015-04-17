@@ -18,7 +18,7 @@ Collaborative: Open-Source / Open-Hardware / Scalable / Educational
 And more to come!
 
 ##Documentation
-Please check the [wiki page](https://github.com/UrbanaPlant/urbanpotager/wiki)!
+Please check the [wiki page](https://github.com/UrbanaPlant/urbanpotager/wiki)! And give us some feedback!
 
 
 Visit us for more details: <http://www.urbanpotager.com/?lang=en>

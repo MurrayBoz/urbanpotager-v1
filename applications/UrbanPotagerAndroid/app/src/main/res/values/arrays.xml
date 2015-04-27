@@ -6,4 +6,15 @@
         <item>Every 10mn during 20sec</item>
         <item>Every 20mn during 20sec</item>
     </string-array>
+
+    <string-array name="layouts">
+        <item>Friendly</item>
+        <item>Expert</item>
+    </string-array>
+
+    <string-array name="layouts_values">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
 </resources>
+

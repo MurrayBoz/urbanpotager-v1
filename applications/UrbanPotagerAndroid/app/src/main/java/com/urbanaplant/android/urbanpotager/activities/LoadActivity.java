@@ -44,6 +44,10 @@ public class LoadActivity extends ActionBarActivity {
 
         startService(new Intent(LoadActivity.this, BluetoothService.class));
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,new IntentFilter(Protocol.BM_BLUETOOTH));
+
+        if(Tools.isDev)
+            connect();
+
     }
 
     @Override
@@ -68,37 +72,41 @@ public class LoadActivity extends ActionBarActivity {
         public void onReceive(Context context, Intent intent) {
             int state = intent.getIntExtra("state",Protocol.BM_CONNECT_FAIL);
             if(state == Protocol.BM_CONNECT_SUCCESS) {
-                tv_state.setText("Connected to My Potager!");
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Tools.hide(findViewById(R.id.progressBarCircularIndeterminate),1500, new AnimatorListenerAdapter() {
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                super.onAnimationEnd(animation);
-                                tv_state.setText("");
-                                Intent mainIntent = new Intent(LoadActivity.this, MainActivity.class);
-                                LoadActivity.this.startActivity(mainIntent);
-                                LoadActivity.this.finish();
-                            }
-                        });
-                    }
-                }, SPLASH_DISPLAY_LENGTH);
-
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        tv_state.setText("Do some other awesome things...");
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                tv_state.setText("It is almost done!");
-
-                            }
-                        }, SPLASH_DISPLAY_LENGTH/2);
-                    }
-                }, SPLASH_DISPLAY_LENGTH*2/3);
+                connect();
             }
         }
     };
+
+    private void connect() {
+        tv_state.setText("Connected to My Potager!");
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Tools.hide(findViewById(R.id.progressBarCircularIndeterminate), 1500, new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        tv_state.setText("");
+                        Intent mainIntent = new Intent(LoadActivity.this, MainActivity.class);
+                        LoadActivity.this.startActivity(mainIntent);
+                        LoadActivity.this.finish();
+                    }
+                });
+            }
+        }, SPLASH_DISPLAY_LENGTH);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                tv_state.setText("Do some other awesome things...");
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        tv_state.setText("It is almost done!");
+
+                    }
+                }, SPLASH_DISPLAY_LENGTH/2);
+            }
+        }, SPLASH_DISPLAY_LENGTH*2/3);
+    }
 }

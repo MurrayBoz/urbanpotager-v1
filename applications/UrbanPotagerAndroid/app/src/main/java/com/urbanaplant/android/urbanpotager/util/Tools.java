@@ -15,6 +15,8 @@ import android.widget.Toast;
  */
 public class Tools {
 
+    public static boolean isDev = true;
+
     /**
      * This is the tag for log in the application
      */

@@ -143,8 +143,10 @@ public class MainActivity extends MaterialNavigationDrawer implements
         @Override
         public void onReceive(Context context, Intent intent) {
             String datas = intent.getStringExtra("datas");
-            datas = datas.substring(0,datas.length()-1);
-            Tools.toast(MainActivity.this,datas);
+            if(datas != null) {
+                datas = datas.substring(0, datas.length() - 1);
+                Tools.toast(MainActivity.this, datas);
+            }
         }
     };
 

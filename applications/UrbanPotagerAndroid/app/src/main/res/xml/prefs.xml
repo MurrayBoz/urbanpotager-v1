@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:persistent="true">
+
+    <PreferenceCategory android:title="UrbanPotager connection">
+        <SwitchPreference
+            android:title="Connect your potager"
+            android:summaryOn="Make your UrbanPotager talk to you!"
+            android:summaryOff="Make your UrbanPotager talk to you!"
+            android:key="connection"
+            android:disableDependentsState="false"
+            />
+        <CheckBoxPreference
+            android:title="Wifi connection"
+            android:summaryOn="Wifi connection to UrbanPotager is On"
+            android:summaryOff="No Wifi connection"
+            android:dependency="connection"
+            android:key="WifiConnection"
+            />
+        <CheckBoxPreference
+            android:title="Bluetooth connection"
+            android:summaryOn="Bluetooth connection is On"
+            android:summaryOff="No Bluetooth connection"
+            android:dependency="connection"
+            android:key="BTConnection"
+            />
+        <Preference
+            android:title="Connected"
+            android:summary="HC-06"
+            android:dependency="BTConnection"
+            android:key="currentConnection"
+            />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Notifications">
+        <SwitchPreference
+            android:title="Enable notifications"
+            android:summaryOn="Send notifications from UrbanPotager"
+            android:summaryOff="No notifications"
+            android:key="notifications"
+            android:disableDependentsState="false"
+            />
+        <CheckBoxPreference
+            android:dependency="notifications"
+            android:title="Sound notifications"
+            android:key="soundNotifications"
+            android:summaryOn="Read a sound each notification"
+            android:summaryOff="No sound"
+            />
+        <CheckBoxPreference
+            android:dependency="notifications"
+            android:title="Vibration"
+            android:key="vibrationsNotifications"
+            android:summaryOn="Vibrate the phone when a notification"
+            android:summaryOff="No vibration"
+            />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Other">
+        <ListPreference
+            android:title="Layout"
+            android:entries="@array/layouts"
+            android:entryValues="@array/layouts_values"
+            />
+        <Preference
+            android:title="Sign out"
+            />
+        <Preference
+            android:title="Open-source"
+            android:summary="Under CC-BY-NC-SA License"
+            />
+        <Preference
+            android:title="Version"
+            android:summary="num version"
+            />
+    </PreferenceCategory>
+
+</PreferenceScreen>

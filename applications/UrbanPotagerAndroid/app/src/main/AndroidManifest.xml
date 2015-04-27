@@ -18,7 +18,7 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id"/>
+            android:value="0"/>
 
         <activity
             android:name=".activities.LoginActivity"

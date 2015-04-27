@@ -5,6 +5,17 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="facebook_app_id"></string>
+
+    <string name="material_category">Material Category</string>
+    <string name="material_preference">Material Preference</string>
+    <string name="material_checkbox_preference">Material CheckBox Preference</string>
+    <string name="material_summary">Material Summary</string>
+    <string name="material_summary_with_icon">Material Summary + Icon</string>
+    <string name="material_checkbox_key">material_checkbox_key</string>
+    <string name="material_checkbox_summary_on">Material CheckBox Summary On</string>
+    <string name="material_checkbox_summary_off">Material CheckBox Summary Off</string>
+    <string name="material_switch_preference">Material Switch Preference</string>
+    <string name="material_switch_preference_on">Material Switch Summary On</string>
+    <string name="material_switch_preference_off">Material Switch Summary Off</string>
 
 </resources>

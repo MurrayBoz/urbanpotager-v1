@@ -1,6 +1,7 @@
 package com.urbanaplant.android.urbanpotager.activities;
 
 import android.os.Bundle;
+import android.preference.PreferenceFragment;
 import android.support.v7.app.ActionBarActivity;
 
 import com.urbanaplant.android.urbanpotager.R;
@@ -10,9 +11,23 @@ import com.urbanaplant.android.urbanpotager.R;
  */
 public class Settings extends ActionBarActivity {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.settings);
+
+        if (savedInstanceState == null) {
+            getFragmentManager().beginTransaction()
+                    .add(android.R.id.content, new SettingsFragment())
+                    .commit();
+        }
+    }
+
+    public static class SettingsFragment extends PreferenceFragment {
+
+        @Override public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+
+            addPreferencesFromResource(R.xml.prefs);
+
+        }
     }
 }

@@ -1,5 +1,5 @@
 /***************************************************************
-------- Urban Potager - Micro Edition v3 ------- 
+------- Urban Potager - Micro Edition v4 ------- 
 Author : Julien Morin (UrbanaPlant)
 Licence : CC-BY-SA-NC
 Tutorial : www.urbanpotager.com
@@ -7,300 +7,319 @@ Last Update : 2015-04-30
 Last Update By : Tatiana
 ***************************************************************/
 
+//////////////////////////////////////////////////
+//                  Includes                    //
+//////////////////////////////////////////////////
+/***** Own Lib *****/
 #include "chardef.h"
+
+/***** Downloaded Lib *****/
 #include <LiquidCrystal_I2C.h>
-LiquidCrystal_I2C lcd(0x27,16,2);
-int lightPin = 1;   
-long longLightReading=0;
-long longTempVal=0;
-long longHumiVal=0;
-String detailledStatus1;    // Status ligne 1 (max 16 caractères)
-String detailledStatus2;    // Status ligne 2 (max 16 caractères)
-String lightVal;
-String tempVal;
-String humiVal;
-long lightPercent;
-
-unsigned long lastSensorReading=0;
-unsigned long delaySensorReading = 5 ; // every 5 s
-
-unsigned long lastWatering=0;
-unsigned long durationWatering = 20;// 20 seconds (in seconds)
-unsigned long delayWatering = 1200 ; // 1200 = every 20 mn (in seconds)
-unsigned long currentTime;
-boolean bLightON=false;
-boolean bPumpON=false;
-
-int startLight = 7;       // Heure de DEBUT lumière (8 = allumage à 8:00)
-int endLight = 23;        // Heure de FIN lumière (22 = extinction à 22:00)
-int lightMinValue = 90;                
-
-/****** RTC Libraries & Variables ******************/
 #include <SPI.h>
-#include <RTClib.h>          // RTC library
-#include <Wire.h>            // linked to RTC
-RTC_DS1307 RTC;
-#if defined(__SAM3X8E__)
-    #undef __FlashStringHelper::F(string_literal)
-    #define F(string_literal) string_literal
-#endif
-long time; 
-String myDate;
-String myTime;
-  
-#include <DHT22.h>   
-int tempPin=7;      
+#include <RTClib.h>
+#include <DHT22.h> 
+
+/***** Arduino's Lib *****/
+#include <Wire.h>
+
+
+//////////////////////////////////////////////////////
+//                  Declarations                    //
+//////////////////////////////////////////////////////
+
+/***** You can adjuste the pins if you want *****/
+int tempPin		= 7;
+int lightPin	= 1;
+int pinLight	= 8;
+int pinPump		= 9;
+
+/***** You can adjuste the values if you want *****/
+unsigned long 	delaySensorReading	= 5;		// Sensor will be check each delaySensorReading seconds
+unsigned long 	durationWatering	= 20;
+unsigned long 	delayWatering		= 1200 ;	// 1200 = every 20 mn (in seconds)
+boolean			canUseLight			= false;
+boolean			canUsePump			= false;
+int				startLight			= 7;		// Start light at <hour> (8 => led on at 7:00AM)
+int 			endLight			= 13;		// Heure de FIN lumière (22 => led of 09:00PM)
+int 			lightMinValue		= 90;
+
+/*****                    Screen                      *****/
+/***** GND -> GND / VCC -> 5V / SDA -> A4 / SCL -> A5 *****/
+LiquidCrystal_I2C lcd(0x27,16,2);
+byte celcius[8]		= CELCIUS_ARRAY; 
+byte light[8]		= LIGHT_ARRAY;
+byte humidity[8]	= HUMIDITY_ARRAY;
+byte temp[8]		= TEMP_ARRAY;
+byte water1[8]		= WATER_ARRAY;
+byte water2[8]		= WATER2_ARRAY;
+
+/***** Temperature *****/
 DHT22 myDHT22(tempPin);
 
-int pinLight = 8;  
-int pinPump = 9;  
+/***** Time and hour *****/
+RTC_DS1307 RTC;
+#if defined(__SAM3X8E__)
+	#undef __FlashStringHelper::F(string_literal)
+	#define F(string_literal) string_literal
+#endif
 
-byte celcius[8] = CELCIUS_ARRAY; 
-byte light[8] = LIGHT_ARRAY;
-byte humidity[8] = HUMIDITY_ARRAY;
-byte temp[8] = TEMP_ARRAY;
-byte water1[8] = WATER_ARRAY;
-byte water2[8] = WATER2_ARRAY;
+/***** Variables *****/
+//Those values will be change in the loop
+unsigned long 	lastWatering		= 0;
+long 			longLightReading	= 0;
+long 			longTempVal			= 0;
+long 			longHumiVal			= 0;
+unsigned long 	astSensorReading	= 0;
+String 			detailledStatus1;	// Status ligne 1 (max 16 char)
+String 			detailledStatus2;	// Status ligne 2 (max 16 char)
+String 			lightVal;			//This is the value of Light sensor in String
+String 			tempVal;			//This is the value of Temperature sensor in String
+String 			humiVal;			//This is the value of Humidity sensor in String
+long 			lightPercent;
+unsigned long 	currentTime;
+long 			time; 
+String 			myDate;
+String 			myTime;
 
-
+////////////////////////////////////////////////
+//                 Base Code                  //
+////////////////////////////////////////////////
 void setup() {
-  Serial.begin(9600);
-  lcd.init();
-  lcd.backlight();
-  lcd.createChar(0, celcius);
-  lcd.createChar(1, light);
-  lcd.createChar(2, humidity);
-  lcd.createChar(3, temp);
-  lcd.createChar(4, water1);
-  lcd.createChar(5, water2);
-  //lcd.createChar(6, urbanpotager1);
-  lcd.home();
+	//Begin Serial
+	Serial.begin(9600);
 
-  pinMode(pinLight, OUTPUT); 
-  digitalWrite(pinLight,HIGH); // Turn OFF (default)
-  pinMode(pinPump, OUTPUT); 
-  digitalWrite(pinPump,HIGH); // Turn OFF = HIGH (default)
-  lcd.setCursor(0, 0);
-  lcd.print("  UrbanPotager  ");
-  delay(1000);
-  lcd.setCursor(0, 1);
-  lcd.print("   ");
-  lcd.write(byte(3));
-  delay(1000);
-  lcd.print("  ");
-  lcd.write(byte(2));
-  delay(1000);
-  lcd.print("  ");
-  lcd.write(byte(1));
-  delay(1000);
-  lcd.print("  ");
-  lcd.write(byte(5));
-  delay(3000) ;
-  Wire.begin();
-  RTC.begin();
-  //RTC.adjust(DateTime(__DATE__, __TIME__));
-  if (! RTC.isrunning()) {
-    Serial.println("RTC is NOT running!");
-    RTC.adjust(DateTime(__DATE__, __TIME__));
-  }
+	//Setup Light
+	pinMode(pinLight, OUTPUT); 
+	digitalWrite(pinLight,HIGH); // Turn OFF (default)
+
+	//Setup Pump
+	pinMode(pinPump, OUTPUT); 
+	digitalWrite(pinPump,HIGH); // Turn OFF = HIGH (default)
+
+	//Setup LCD
+	initLCD();
+
+	//Setup RTC Module
+	Wire.begin();
+	RTC.begin();
+	// WARNING! Un-comment the next line if the program is launch for the first time. It will init the RTC Module with the actual hour.
+	//RTC.adjust(DateTime(__DATE__, __TIME__));
+	if (! RTC.isrunning()) {
+		// Serial.println("RTC is NOT running!");
+		RTC.adjust(DateTime(__DATE__, __TIME__));
+	}
 }
 
 void loop() {
-  DateTime now = RTC.now();
-  time = now.unixtime(); // seconds  
-  //if (now.day() < 10) { myDate ="0"+ String(now.day())+"/";} else {myDate = String(now.day())+"/";}             // correct date if necessary
-  //if (now.month() < 10) { myDate =myDate+"0"+ String(now.month())+"/";} else {myDate = myDate+String(now.month())+"/";}             // correct date if necessary
-  //myDate = myDate+String(now.year());
-  
-  if (now.hour() < 10) { myTime ="0"+ String(now.hour())+":";} else {myTime = String(now.hour())+":";}             // correct date if necessary
-  if (now.minute() < 10) { myTime =myTime+"0"+ String(now.minute());} else {myTime = myTime+String(now.minute());}             // correct date if necessary
+	DateTime now = RTC.now();
+	time = now.unixtime();
 
-  if (time > (lastSensorReading + delaySensorReading)) {
-    getSensorsValues();  
-    lastSensorReading = time;
-  } 
-  manageDayLight();            // Based on Settings & RTC, swith High / Low lights 
-  manageWatering();   
-  manageLCDDisplay();
-  //delay(5000) ;
+	// correct date if necessary
+	myTime = (now.hour() < 10) ? "0" : "";
+	myTime += String(now.hour())+":";
+	myTime += (now.minute() < 10) ?"0" : "";
+	myTime += String(now.minute());
+
+	if (time > (lastSensorReading + delaySensorReading)) {
+		checkSensorsValues();  
+		lastSensorReading = time;
+	} 
+
+	manageDayLight();
+	manageWatering();   
+	manageLCDDisplay();
 }
 
-/**********************************************************************
-             Light / Temp / Humidity
-**********************************************************************/
-void getSensorsValues() { 
-  // Display Temperature in C
+///////////////////////////////////////////////
+//                 Fuctions                  //
+///////////////////////////////////////////////
 
-  longLightReading = analogRead(lightPin);
-  
-  DHT22_ERROR_t errorCode;
-  errorCode = myDHT22.readData();
+/**
+ *  This function is used to attribute the  
+ *  correct data to each sensors variables.
+ */
+void checkSensorsValues() { 
+	//Get Light value
+	longLightReading = analogRead(lightPin);
 
-  switch(errorCode)
-  {
-    case DHT_ERROR_NONE:
-      longTempVal = myDHT22.getTemperatureC();
-      longHumiVal = myDHT22.getHumidity();
-      break;
-      
-    case DHT_ERROR_CHECKSUM:
-      //Serial.print("check sum error ");
-      break;
-      
-    case DHT_BUS_HUNG:
-      //Serial.println("BUS Hung ");
-      break;
-      
-    case DHT_ERROR_NOT_PRESENT:
-      //Serial.println("Not Present ");
-      break;
-      
-    case DHT_ERROR_ACK_TOO_LONG:
-      //Serial.println("ACK time out ");
-      break;
-      
-    case DHT_ERROR_SYNC_TIMEOUT:
-      //Serial.println("Sync Timeout ");
-      break;
-      
-    case DHT_ERROR_DATA_TIMEOUT:
-      //Serial.println("Data Timeout ");
-      break;
-      
-    case DHT_ERROR_TOOQUICK:
-      //Serial.println("Polled to quick ");
-      break;
-  }
-  lightPercent = map(longLightReading, 0, 1023, 0, 100);
-  Serial.print("longLightReading = ");
-  Serial.println(longLightReading);
-  lightVal = doubleToString(lightPercent, 0);
-  tempVal = doubleToString(longTempVal, 0);
-  humiVal = doubleToString(longHumiVal, 0);  
+	//Get Temperature and humidity values
+	DHT22_ERROR_t errorCode;
+	errorCode = myDHT22.readData();
+
+	if ( errorCode = DHT_ERROR_NONE)
+		longTempVal = myDHT22.getTemperatureC();
+		longHumiVal = myDHT22.getHumidity();
+
+	/* Other possible case: 
+		DHT_ERROR_CHECKSUM, DHT_BUS_HUNG, DHT_ERROR_NOT_PRESENT, DHT_ERROR_ACK_TOO_LONG
+		DHT_ERROR_SYNC_TIMEOUT, DHT_ERROR_DATA_TIMEOUT, DHT_ERROR_TOOQUICK
+		You can use a switch/case to define different action for each case. 
+		Actually, only DHT_ERROR_NONE is used in UrbanPotager */
+
+	// Values to String
+	lightPercent = map(longLightReading, 0, 1023, 0, 100);
+
+	lightVal = doubleToString(lightPercent, 0);
+	tempVal = doubleToString(longTempVal, 0);
+	humiVal = doubleToString(longHumiVal, 0);  
 }
 
-/****** LIGHTING SYSTEM ******/
+/**
+ *  This function is used to make led On if time
+ *  is between startLight and endLight
+ */
 void manageDayLight() { 
- DateTime now = RTC.now();
- int myHour = now.hour(); 
- if ((myHour >= startLight ) && (myHour < endLight)) { 
-   if (lightPercent>=90) {
-      digitalWrite(pinLight,HIGH); // Turn OFF = HIGH (default)
-      bLightON=false;
-    } else {
-      digitalWrite(pinLight,LOW); // Turn ON
-      bLightON=true;
-    }
- } else {
-   digitalWrite(pinLight,HIGH); // Turn OFF = HIGH (default)
-   bLightON=false;
- }
+	DateTime now = RTC.now();
+	int myHour = now.hour(); 
+	if ((myHour >= startLight ) && (myHour < endLight)) { 
+		canUseLight = !(lightPercent>=90);
+		digitalWrite(pinLight, canUseLight ? LOW : HIGH);
+	} else {
+		digitalWrite(pinLight,HIGH); // Turn OFF = HIGH (default)
+		canUseLight=false;
+	}
 }
 
-/****** WATERING SYSTEM ******/
+/**
+ *  This function is used to make 
+ *  pump work each delayWatering
+ */
 void manageWatering() {  
-  if (bPumpON==true) {
-      Serial.print("Pump ON (lastWatering=");
-      Serial.print(lastWatering);
-      Serial.print(" / time=");
-      Serial.print(time);
-      Serial.print(" / durationWatering=");
-      Serial.print(durationWatering);
-      Serial.println(")");
-    if (time > (lastWatering + durationWatering)) {
-      digitalWrite(pinPump,HIGH); // Turn OFF = HIGH (default)
-      bPumpON=false;
-      Serial.print("Pump OFF (lastWatering=");
-      Serial.print(lastWatering);
-      Serial.print(" / time=");
-      Serial.print(time);
-      Serial.println(")");
-      lastWatering = time;
-    }
-  } else {
-    if (time > (lastWatering + delayWatering)) {
-      digitalWrite(pinPump,LOW); // Turn ON
-      Serial.print("Pump ON (lastWatering=");
-      Serial.print(lastWatering);
-      Serial.print(" / time=");
-      Serial.print(time);
-      Serial.println(")");
-      lastWatering =time;
-      bPumpON=true;
-    }
-  }
+	if (canUsePump==true) {
+		// Serial.print("Pump ON (lastWatering=");
+		// Serial.print(lastWatering);
+		// Serial.print(" / time=");
+		// Serial.print(time);
+		// Serial.print(" / durationWatering=");
+		// Serial.print(durationWatering);
+		// Serial.println(")");
+		if (time > (lastWatering + durationWatering)) {
+			digitalWrite(pinPump,HIGH); // Turn OFF = HIGH (default)
+			canUsePump=false;
+			// Serial.print("Pump OFF (lastWatering=");
+			// Serial.print(lastWatering);
+			// Serial.print(" / time=");
+			// Serial.print(time);
+			// Serial.println(")");
+			lastWatering = time;
+		}
+	} else {
+		if (time > (lastWatering + delayWatering)) {
+			digitalWrite(pinPump,LOW); // Turn ON
+			// Serial.print("Pump ON (lastWatering=");
+			// Serial.print(lastWatering);
+			// Serial.print(" / time=");
+			// Serial.print(time);
+			// Serial.println(")");
+			lastWatering =time;
+			canUsePump=true;
+		}
+	}
 }
-  
-/****** LCD DISPLAY SYSTEM ******/  
+	
+/**
+ *  This function is used to show 
+ *  all variables in the screen
+ */
 void manageLCDDisplay() {
-  if (bPumpON == true) {
-    lcd.setCursor(0, 0);
-    lcd.print(" ");
-    lcd.write(byte(5));  // Water
-    lcd.print("  Watering  ");
-    lcd.write(byte(5));  // Water
-    lcd.print(" ");
-    
-    lcd.setCursor(0, 1);
-    lcd.write(byte(5));  // Water
-    lcd.print(" in progress  ");
-    lcd.write(byte(5));  // Water
+	if (canUsePump == true) {
+		lcd.setCursor(0, 0);
+		lcd.print(" ");
+		lcd.write(byte(5));  // Water
+		lcd.print("  Watering  ");
+		lcd.write(byte(5));  // Water
+		lcd.print(" ");
 
-    
-  } else {
-    //lcd.setCursor(0, 0);
-    //lcd.print("===== "+myTime+" ====");
-    lcd.setCursor(0, 0);
-    lcd.print(myTime+"    (");
-    lcd.write(byte(5));  // Water char
-    int nextWatering = (lastWatering+delayWatering) - time;
-    if (nextWatering >= 3600) {
-      nextWatering = nextWatering/3600;
-      lcd.print(String(nextWatering)+"h)    ");
-    } else {
-      if (nextWatering >= 60) {
-        nextWatering = nextWatering/60;
-        lcd.print(String(nextWatering)+"mn)        ");
-      } else {
-        lcd.print(String(nextWatering)+"s)         ");      
-      }
-    }
-    lcd.setCursor(0, 1);
-    lcd.write(byte(3));  // Temp char
-    lcd.setCursor(1, 1);
-    lcd.print(tempVal);
-    lcd.setCursor(3, 1);
-    lcd.write(byte(0));  // Celcius char
-    lcd.setCursor(4, 1);
-    lcd.print("  ");
-    lcd.setCursor(6, 1);
-    lcd.write(byte(2));  // Humidity char
-    lcd.setCursor(7, 1);
-    lcd.print(humiVal+"%  ");
-    lcd.setCursor(12, 1);
-    lcd.write(byte(1));  // Light char
-    lcd.setCursor(13, 1);
-    lcd.print(lightVal+"%");
-  }
-
+		lcd.setCursor(0, 1);
+		lcd.write(byte(5));  // Water
+		lcd.print(" in progress  ");
+		lcd.write(byte(5));  // Water 
+	} else {
+		//lcd.setCursor(0, 0);
+		//lcd.print("===== "+myTime+" ====");
+		lcd.setCursor(0, 0);
+		lcd.print(myTime+"    (");
+		lcd.write(byte(5));  // Water char
+		int nextWatering = (lastWatering+delayWatering) - time;
+		if (nextWatering >= 3600) {
+			nextWatering = nextWatering/3600;
+			lcd.print(String(nextWatering)+"h)    ");
+		} else {
+			if (nextWatering >= 60) {
+				nextWatering = nextWatering/60;
+				lcd.print(String(nextWatering)+"mn)        ");
+			} else {
+				lcd.print(String(nextWatering)+"s)         ");      
+			}
+		}
+		lcd.setCursor(0, 1);
+		lcd.write(byte(3));  // Temp char
+		lcd.setCursor(1, 1);
+		lcd.print(tempVal);
+		lcd.setCursor(3, 1);
+		lcd.write(byte(0));  // Celcius char
+		lcd.setCursor(4, 1);
+		lcd.print("  ");
+		lcd.setCursor(6, 1);
+		lcd.write(byte(2));  // Humidity char
+		lcd.setCursor(7, 1);
+		lcd.print(humiVal+"%  ");
+		lcd.setCursor(12, 1);
+		lcd.write(byte(1));  // Light char
+		lcd.setCursor(13, 1);
+		lcd.print(lightVal+"%");
+	}
 }
 
-/****** TOOLS FUNCTIONS ******/  
+/**
+ *  This function is used to init the LCD in setup function
+ */
+ void initLCD(){
+	lcd.init();
+	lcd.backlight();
+	lcd.createChar(0, celcius);
+	lcd.createChar(1, light);
+	lcd.createChar(2, humidity);
+	lcd.createChar(3, temp);
+	lcd.createChar(4, water1);
+	lcd.createChar(5, water2);
+	lcd.home();
+	lcd.setCursor(0, 0);
+	lcd.print("  UrbanPotager  ");
+	delay(1000);
+	lcd.setCursor(0, 1);
+	lcd.print("   ");
+	lcd.write(byte(3));
+	delay(1000);
+	lcd.print("  ");
+	lcd.write(byte(2));
+	delay(1000);
+	lcd.print("  ");
+	lcd.write(byte(1));
+	delay(1000);
+	lcd.print("  ");
+	lcd.write(byte(5));
+	delay(3000) ;
+ }
+
+////////////////////////////////////////////
+//                 Tools                  //
+//////////////////////////////////////////// 
 String doubleToString(double input,int decimalPlaces)
 {
-  if(decimalPlaces!=0){
-  String string = String((int)(input*pow(10,decimalPlaces)));
-  if(abs(input)<1)
-    {
-    if(input>0)
-      string = "0"+string;
-    else if(input<0)
-      string = string.substring(0,1)+"0"+string.substring(1);
-    }
-    return string.substring(0,string.length()-decimalPlaces)+"."+string.substring(string.length()-decimalPlaces);
-  }
-  else 
-  {
-    return String((int)input);
-  }
+	if(decimalPlaces!=0){
+		String string = String((int)(input*pow(10,decimalPlaces)));
+		if(abs(input)<1)
+		{
+			if(input>0)
+				string = "0"+string;
+			else if(input<0)
+				string = string.substring(0,1)+"0"+string.substring(1);
+		}
+		return string.substring(0,string.length()-decimalPlaces)+"."+string.substring(string.length()-decimalPlaces);
+	}
+	else 
+	{
+		return String((int)input);
+	}
 }

@@ -16,11 +16,13 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.gc.materialdesign.views.Switch;
 import com.urbanaplant.android.urbanpotager.MainActivity;
 import com.urbanaplant.android.urbanpotager.R;
+import com.urbanaplant.android.urbanpotager.communication.Protocol;
 import com.urbanaplant.android.urbanpotager.customViews.CustomCardSettings;
 import com.urbanaplant.android.urbanpotager.customViews.CustomExpandCardMaintenance;
 import com.urbanaplant.android.urbanpotager.customViews.CustomHeader;
 import com.urbanaplant.android.urbanpotager.customViews.CustomHeaderSwitch;
 import com.urbanaplant.android.urbanpotager.customViews.MyFragment;
+import com.urbanaplant.android.urbanpotager.listeners.OnCheckManageSettings;
 import com.urbanaplant.android.urbanpotager.listeners.OnFragmentInteractionListener;
 
 import it.gmariotti.cardslib.library.internal.Card;
@@ -30,7 +32,7 @@ import it.gmariotti.cardslib.library.internal.ViewToClickToExpand;
 import it.gmariotti.cardslib.library.view.CardViewNative;
 
 
-public class FragmentSettings extends MyFragment implements View.OnClickListener, Switch.OnCheckListener  {
+public class FragmentSettings extends MyFragment implements View.OnClickListener, Switch.OnCheckListener, OnCheckManageSettings {
 
     private Card cardMaintenance;
     private CustomCardSettings cardSettings;
@@ -60,6 +62,7 @@ public class FragmentSettings extends MyFragment implements View.OnClickListener
         cardMaintenance.addCardHeader(header);
         cardMaintenance.setTitle("Le mode maintenance vous permet de controller votre UrbanPotager en direct.");
         CardExpand expand = new CustomExpandCardMaintenance(context);
+        ((CustomExpandCardMaintenance)expand).setListener(this);
         cardMaintenance.addCardExpand(expand);
         ViewToClickToExpand viewToClickToExpand = ViewToClickToExpand.builder().enableForExpandAction();
         cardMaintenance.setViewToClickToExpand(viewToClickToExpand);
@@ -125,8 +128,22 @@ public class FragmentSettings extends MyFragment implements View.OnClickListener
             }, 400);
         }
 
-        ((MainActivity)getActivity()).doBindService();
-
-
+        ((MainActivity)getActivity()).write(b ? Protocol.ProtoWrite.MANAGE_MODE_ON : Protocol.ProtoWrite.MANAGE_MODE_OFF);
     }
+
+    @Override
+    public void onCheckLight(boolean isCheck) {
+        ((MainActivity)getActivity()).write(isCheck ? Protocol.ProtoWrite.LIGHT_ON : Protocol.ProtoWrite.LIGHT_OFF);
+    }
+
+    @Override
+    public void onCheckPump(boolean isCheck) {
+        ((MainActivity)getActivity()).write(isCheck ? Protocol.ProtoWrite.PUMP_ON : Protocol.ProtoWrite.PUMP_OFF);
+    }
+
+    @Override
+    public void onCheckClean(boolean isCheck) {
+        ((MainActivity)getActivity()).write(isCheck ? Protocol.ProtoWrite.CLEAN_ON : Protocol.ProtoWrite.CLEAN_OFF);
+    }
+
 }

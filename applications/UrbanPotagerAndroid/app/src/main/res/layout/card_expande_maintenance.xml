@@ -14,7 +14,7 @@
             style="@style/switchtext"
             android:id="@+id/maintenance_light_text"/>
 
-        <com.gc.materialdesign.views.CheckBox
+        <CheckBox
             android:id="@+id/maintenance_light_switch"
             style="@style/switchwithtext"/>/>
 
@@ -28,7 +28,7 @@
             android:text="Water Pump"
             android:id="@+id/maintenance_pump_text"
             style="@style/switchtext"/>
-        <com.gc.materialdesign.views.CheckBox
+        <CheckBox
             android:id="@+id/maintenance_pump_switch"
             style="@style/switchwithtext"/>
     </RelativeLayout>
@@ -41,7 +41,7 @@
             android:text="Cleaning Process"
             android:id="@+id/maintenance_clean_text"
             style="@style/switchtext"/>
-        <com.gc.materialdesign.views.CheckBox
+        <CheckBox
             android:id="@+id/maintenance_clean_switch"
             style="@style/switchwithtext"/>
     </RelativeLayout>

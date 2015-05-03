@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.util.UUID;
 
 /**
  * Created by Tatiana Grange on 07/04/2015.
@@ -82,9 +83,39 @@ public class BluetoothService extends Service{
     }
 
 
-    public void write(String s) throws IOException {
-        if(outputStream != null)
-            outputStream.write(s.getBytes());
+    public void write(Protocol.ProtoWrite s) throws IOException {
+
+        if (outputStream != null){
+            String toSend = "mas";
+            switch (s) {
+                case MANAGE_MODE_OFF:
+                    toSend += "manof";
+                    break;
+                case MANAGE_MODE_ON:
+                    toSend += "manon";
+                    break;
+                case PUMP_OFF:
+                    toSend += "pumof";
+                    break;
+                case PUMP_ON:
+                    toSend += "pumon";
+                    break;
+                case LIGHT_OFF:
+                    toSend += "ligof";
+                    break;
+                case LIGHT_ON:
+                    toSend += "ligon";
+                    break;
+                case CLEAN_OFF:
+                    toSend += "cleof";
+                    break;
+                case CLEAN_ON:
+                    toSend += "cleon";
+                    break;
+            }
+            outputStream.write(toSend.getBytes());
+        }
+
     }
 
     private String read() throws IOException {

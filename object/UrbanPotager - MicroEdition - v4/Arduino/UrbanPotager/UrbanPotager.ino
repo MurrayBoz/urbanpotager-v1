@@ -69,7 +69,7 @@ unsigned long 	lastWatering		= 0;
 long 			longLightReading	= 0;
 long 			longTempVal			= 0;
 long 			longHumiVal			= 0;
-unsigned long 	astSensorReading	= 0;
+unsigned long 	lastSensorReading	= 0;
 String 			detailledStatus1;	// Status ligne 1 (max 16 char)
 String 			detailledStatus2;	// Status ligne 2 (max 16 char)
 String 			lightVal;			//This is the value of Light sensor in String
@@ -80,11 +80,16 @@ unsigned long 	currentTime;
 long 			time; 
 String 			myDate;
 String 			myTime;
+String 			readString;
+boolean			isManage 			= false;
+boolean			isCleaning 			= false;
+
 
 ////////////////////////////////////////////////
 //                 Base Code                  //
 ////////////////////////////////////////////////
 void setup() {
+
 	//Begin Serial
 	Serial.begin(9600);
 
@@ -125,9 +130,62 @@ void loop() {
 		lastSensorReading = time;
 	} 
 
-	manageDayLight();
-	manageWatering();   
-	manageLCDDisplay();
+	while (Serial.available()) {
+		delay(3);
+		if (Serial.available() > 0) {
+			char c = Serial.read();
+			readString += c;
+		} 
+	}
+
+	if(!isManage){
+		manageDayLight();
+		manageWatering();
+		manageLCDDisplay();
+	}else{
+		lcd.setCursor(0, 0);
+		lcd.print("Maintenance mode");
+
+		lcd.setCursor(0, 1);
+		lcd.print(isCleaning ? "Cleaning on     " : "Cleaning off    ");
+	}
+
+	if (readString.length() >0) {
+		// Only get master order
+		if (readString.substring(0,3) == "mas") {
+			String newstring = readString.substring(3);
+			String isOnOrOff = newstring.substring(3);
+			if (newstring.substring(0,3) == "man"){
+				if (isOnOrOff == "of")
+					isManage = false;
+				else
+					isManage = true;
+			}else if(isManage){
+				String action = newstring.substring(0,3);
+				if (action == "pum"){
+					digitalWrite(pinPump, (isOnOrOff == "of") ? HIGH : LOW);
+				}else if(action == "lig"){
+					digitalWrite(pinLight, (isOnOrOff == "of") ? HIGH : LOW);
+				}else if(action == "cle"){
+					isCleaning = (isOnOrOff == "on");
+					if(isCleaning){
+						digitalWrite(pinPump, HIGH);
+						digitalWrite(pinLight, HIGH);
+					}
+				}
+			}else{
+				lcd.setCursor(0, 0);
+				lcd.print(" No Maintenance ");
+
+				lcd.setCursor(0, 1);
+				lcd.print("      mode      ");
+				delay(3000);
+			}
+		}
+		readString = "";
+	}
+	delay(1000);
+	
 }
 
 ///////////////////////////////////////////////

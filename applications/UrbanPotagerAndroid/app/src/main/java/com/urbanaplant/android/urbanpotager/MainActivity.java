@@ -154,20 +154,11 @@ public class MainActivity extends MaterialNavigationDrawer implements
 
     private ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder service) {
-            // This is called when the connection with the service has been
-            // established, giving us the service object we can use to
-            // interact with the service.  Because we have bound to a explicit
-            // service that we know is running in our own process, we can
-            // cast its IBinder to a concrete class and directly access it.
             mBoundService = ((BluetoothService.BluetoothBinder)service).getService();
             Tools.log("up");
         }
 
         public void onServiceDisconnected(ComponentName className) {
-            // This is called when the connection with the service has been
-            // unexpectedly disconnected -- that is, its process crashed.
-            // Because it is running in our same process, we should never
-            // see this happen.
             mBoundService = null;
             Tools.log("down");
         }
@@ -175,18 +166,14 @@ public class MainActivity extends MaterialNavigationDrawer implements
 
     private boolean mIsBound = false;
 
-    public void doBindService() {
-        // Establish a connection with the service. We use an explicit
-        // class name because we want a specific service implementation that
-        // we know will be running in our own process (and thus won't be
-        // supporting component replacement by other applications).
+    public void write(final Protocol.ProtoWrite writeMode) {
         bindService(new Intent(getBaseContext(),
                 BluetoothService.class), mConnection, Context.BIND_AUTO_CREATE);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 try {
-                    mBoundService.write("fevqdw");
+                    mBoundService.write(writeMode);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

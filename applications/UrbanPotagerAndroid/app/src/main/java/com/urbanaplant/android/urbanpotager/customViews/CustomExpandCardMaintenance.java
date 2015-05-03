@@ -5,21 +5,25 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
-import com.gc.materialdesign.views.CheckBox;
+
+import android.widget.CheckBox;
 import com.urbanaplant.android.urbanpotager.R;
+import com.urbanaplant.android.urbanpotager.listeners.OnCheckManageSettings;
 
 import it.gmariotti.cardslib.library.internal.CardExpand;
 
 /**
  * Created by Tatiana Grange on 06/03/15.
  */
-public class CustomExpandCardMaintenance extends CardExpand implements CheckBox.OnCheckListener {
+public class CustomExpandCardMaintenance extends CardExpand implements CompoundButton.OnCheckedChangeListener {
 
     private CheckBox cb_lights;
     private CheckBox cb_water;
     private CheckBox cb_cleaning;
+    private OnCheckManageSettings listener;
 
     //Use your resource ID for your inner layout
         public CustomExpandCardMaintenance(Context context) {
@@ -33,9 +37,11 @@ public class CustomExpandCardMaintenance extends CardExpand implements CheckBox.
         colorDrawableLeft(view,(TextView) view.findViewById(R.id.maintenance_clean_text));
 
         cb_lights = (CheckBox) view.findViewById(R.id.maintenance_light_switch);
+        cb_lights.setOnCheckedChangeListener(this);
         cb_water = (CheckBox) view.findViewById(R.id.maintenance_pump_switch);
+        cb_water.setOnCheckedChangeListener(this);
         cb_cleaning = (CheckBox) view.findViewById(R.id.maintenance_clean_switch);
-        cb_cleaning.setOncheckListener(this);
+        cb_cleaning.setOnCheckedChangeListener(this);
     }
 
     private void colorDrawableLeft(View v, TextView tv) {
@@ -45,14 +51,29 @@ public class CustomExpandCardMaintenance extends CardExpand implements CheckBox.
     }
 
     @Override
-    public void onCheck(boolean b) {
-        if(b) {
-            cb_lights.setChecked(false);
-            cb_water.setChecked(false);
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        switch(buttonView.getId()){
+            case R.id.maintenance_clean_switch:
+                cb_lights.setEnabled(!isChecked);
+                cb_water.setEnabled(!isChecked);
+                if(isChecked){
+                    cb_lights.setChecked(!isChecked);
+                    cb_water.setChecked(!isChecked);
+                }
+                listener.onCheckClean(isChecked);
+                break;
+            case R.id.maintenance_light_switch:
+                if(cb_lights.isEnabled())
+                    listener.onCheckLight(isChecked);
+                break;
+            case R.id.maintenance_pump_switch:
+                if(cb_water.isEnabled())
+                    listener.onCheckPump(isChecked);
+                break;
         }
+    }
 
-        /*cb_lights.setEnabled(!b);
-        cb_water.setEnabled(!b);*/
-
+    public void setListener(OnCheckManageSettings listener) {
+        this.listener = listener;
     }
 }

@@ -83,6 +83,7 @@ String 			myTime;
 String 			readString;
 boolean			isManage 			= false;
 boolean			isCleaning 			= false;
+int 			nextWatering		= 0;
 
 
 ////////////////////////////////////////////////
@@ -174,12 +175,19 @@ void loop() {
 					}
 				}
 			}else{
-				lcd.setCursor(0, 0);
-				lcd.print(" No Maintenance ");
-
-				lcd.setCursor(0, 1);
-				lcd.print("      mode      ");
-				delay(3000);
+				if (newstring.substring(0,3) == "upd"){
+					Serial.print("slaupd/");
+					Serial.print(tempVal);
+					Serial.print("/");
+					Serial.print(humiVal);
+					Serial.print("/");
+					Serial.print(lightVal);
+					Serial.print("/");
+					Serial.print(nextWatering);
+					Serial.print("/");
+					Serial.print(digitalRead(pinLight) == HIGH ? "ON" : "OF" );
+					Serial.println("");
+				}
 			}
 		}
 		readString = "";
@@ -298,7 +306,7 @@ void manageLCDDisplay() {
 		lcd.setCursor(0, 0);
 		lcd.print(myTime+"    (");
 		lcd.write(byte(5));  // Water char
-		int nextWatering = (lastWatering+delayWatering) - time;
+		nextWatering = (lastWatering+delayWatering) - time;
 		if (nextWatering >= 3600) {
 			nextWatering = nextWatering/3600;
 			lcd.print(String(nextWatering)+"h)    ");

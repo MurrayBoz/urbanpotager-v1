@@ -25,6 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Username or Email address"
+            android:text="My login"
             android:textSize="15sp"
             app:met_baseColor="#000000"
             app:met_floatingLabel="highlight"
@@ -34,10 +35,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Password"
+            android:text="mypassword"
             android:textSize="15sp"
             app:met_baseColor="#000000"
             app:met_floatingLabel="highlight"
-            app:met_primaryColor="?colorAccent"/>
+            app:met_primaryColor="?colorAccent"
+            android:password="true" />
 
         <LinearLayout
             android:layout_width="match_parent"

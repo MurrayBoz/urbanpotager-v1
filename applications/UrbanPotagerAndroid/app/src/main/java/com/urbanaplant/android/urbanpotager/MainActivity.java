@@ -144,8 +144,22 @@ public class MainActivity extends MaterialNavigationDrawer implements
         public void onReceive(Context context, Intent intent) {
             String datas = intent.getStringExtra("datas");
             if(datas != null) {
-                datas = datas.substring(0, datas.length() - 1);
-                Tools.toast(MainActivity.this, datas);
+                //Check if informations come from plant
+                int index = datas.indexOf("sla");
+                if (index != -1)
+                {
+                    String command = datas.substring(index+3,datas.length()-1);
+                    String commandType = command.substring(0,3);
+
+                    if(commandType.equals("upd")){
+                        String commandDatas = command.substring(4,command.length()-1);
+                        ((FragmentMyPotager)myPotager.getTargetFragment()).setDatas(commandDatas);
+                    }
+                }
+                else {
+                    datas = datas.substring(0, datas.length() - 1);
+                    Tools.toast(MainActivity.this, datas);
+                }
             }
         }
     };

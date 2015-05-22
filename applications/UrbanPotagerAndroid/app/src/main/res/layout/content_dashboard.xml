@@ -41,6 +41,7 @@
                     <TextView
                         style="@style/text.round"
                         android:background="@drawable/bg_round_green"
+                        android:id="@+id/tv_temperatureValue"
                         android:text="24°"/>
                     <TextView
                         android:layout_width="wrap_content"
@@ -52,6 +53,7 @@
                     <TextView
                         style="@style/text.round"
                         android:background="@drawable/bg_round_orange"
+                        android:id="@+id/tv_humidityValue"
                         android:text="60%"/>
                     <TextView
                         android:layout_width="wrap_content"
@@ -63,6 +65,7 @@
                     <TextView
                         style="@style/text.round"
                         android:background="@drawable/bg_round_red"
+                        android:id="@+id/tv_lightValue"
                         android:text="85%"/>
                     <TextView
                         android:layout_width="wrap_content"
@@ -75,6 +78,7 @@
                         style="@style/text.round"
                         android:background="@drawable/bg_round_green"
                         android:src="@drawable/ic_emoticon_happy"
+                        android:id="@+id/iv_airIcon"
                         android:tint="@color/primaryTextColor"/>
                     <TextView
                         android:layout_width="wrap_content"
@@ -153,6 +157,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@color/colorAccent"
+                    android:id="@+id/btn_update"
                     android:text="Update" />
 
             </LinearLayout>

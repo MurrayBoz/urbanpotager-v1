@@ -16,6 +16,7 @@ public class Protocol {
         PUMP_ON,
         PUMP_OFF,
         CLEAN_ON,
-        CLEAN_OFF
+        CLEAN_OFF,
+        UPDATE_INFORMATIONS
     }
 }

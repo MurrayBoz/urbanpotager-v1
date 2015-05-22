@@ -1,6 +1,5 @@
 package com.urbanaplant.android.urbanpotager.communication;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -18,7 +17,6 @@ import android.os.IBinder;
 import android.os.ParcelUuid;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.widget.Toast;
 
 import com.urbanaplant.android.urbanpotager.MainActivity;
 import com.urbanaplant.android.urbanpotager.R;
@@ -28,14 +26,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
-import java.util.UUID;
 
 /**
  * Created by Tatiana Grange on 07/04/2015.
  */
 public class BluetoothService extends Service{
     private final IBinder mBinder = new BluetoothBinder();
-    private String NAME = "HC-06";
+    private String NAME = "MyPotager";
     private BluetoothSocket mSocket;
     private BluetoothAdapter bluetoothAdapter;
     private java.util.UUID UUID;
@@ -53,7 +50,6 @@ public class BluetoothService extends Service{
     @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
-//        return null;
     }
 
     @Override
@@ -112,7 +108,11 @@ public class BluetoothService extends Service{
                 case CLEAN_ON:
                     toSend += "cleon";
                     break;
+                case UPDATE_INFORMATIONS:
+                    toSend += "upd";
+                    break;
             }
+
             outputStream.write(toSend.getBytes());
         }
 

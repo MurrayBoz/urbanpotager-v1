@@ -28,6 +28,8 @@ public class FragmentMyPotager extends MyFragment implements View.OnClickListene
     private TextView tv_lightValue;
     private ImageView airIcon;
     private ButtonFlat btn_update;
+    private TextView tv_nextWatering;
+    private TextView tv_isLightOn;
 
     /* **************************
          * 		Constructors		*
@@ -53,6 +55,8 @@ public class FragmentMyPotager extends MyFragment implements View.OnClickListene
         tv_temperatureValue = (TextView) v.findViewById(R.id.tv_temperatureValue);
         tv_humidityValue = (TextView) v.findViewById(R.id.tv_humidityValue);
         tv_lightValue = (TextView) v.findViewById(R.id.tv_lightValue);
+        tv_nextWatering = (TextView) v.findViewById(R.id.tv_nextWatering);
+        tv_isLightOn = (TextView) v.findViewById(R.id.tv_isLightOn);
         airIcon = (ImageView) v.findViewById(R.id.iv_airIcon);
 
         btn_update = (ButtonFlat) v.findViewById(R.id.btn_update);
@@ -70,8 +74,15 @@ public class FragmentMyPotager extends MyFragment implements View.OnClickListene
 
     public void setDatas(String commandDatas) {
         String[] splitString = commandDatas.split("/");
-        tv_temperatureValue.setText(splitString[1] + "°");
-        tv_humidityValue.setText(splitString[2] + "%");
-        tv_lightValue.setText(splitString[0] + "%");
+
+        tv_temperatureValue.setText(splitString[0] + "°");
+        tv_humidityValue.setText(splitString[1] + "%");
+        tv_lightValue.setText(splitString[2] + "%");
+        int time = Integer.parseInt(splitString[3]);
+        if(time > 60)
+            tv_nextWatering.setText(time/60 + "mn");
+        else
+            tv_nextWatering.setText(time + "s");
+        tv_isLightOn.setText(splitString[4]);
     }
 }

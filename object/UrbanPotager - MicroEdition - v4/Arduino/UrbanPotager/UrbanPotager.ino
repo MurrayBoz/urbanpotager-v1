@@ -17,7 +17,7 @@ Last Update By : Tatiana
 #include <LiquidCrystal_I2C.h>
 #include <SPI.h>
 #include <RTClib.h>
-#include <DHT22.h> 
+#include "DHT.h"
 
 /***** Arduino's Lib *****/
 #include <Wire.h>
@@ -40,7 +40,7 @@ unsigned long 	delayWatering		= 1200 ;	// 1200 = every 20 mn (in seconds)
 boolean			canUseLight			= false;
 boolean			canUsePump			= false;
 int				startLight			= 7;		// Start light at <hour> (8 => led on at 7:00AM)
-int 			endLight			= 13;		// Heure de FIN lumière (22 => led of 09:00PM)
+int 			endLight			= 21;		// Heure de FIN lumière (22 => led of 09:00PM)
 int 			lightMinValue		= 90;
 
 /*****                    Screen                      *****/
@@ -54,7 +54,8 @@ byte water1[8]		= WATER_ARRAY;
 byte water2[8]		= WATER2_ARRAY;
 
 /***** Temperature *****/
-DHT22 myDHT22(tempPin);
+#define DHTTYPE DHT11
+DHT dht(tempPin, DHTTYPE);
 
 /***** Time and hour *****/
 RTC_DS1307 RTC;
@@ -83,7 +84,7 @@ String 			myTime;
 String 			readString;
 boolean			isManage 			= false;
 boolean			isCleaning 			= false;
-int 			nextWatering		= 0;
+int 			nextWateringSeconds	= 0;
 
 
 ////////////////////////////////////////////////
@@ -183,9 +184,9 @@ void loop() {
 					Serial.print("/");
 					Serial.print(lightVal);
 					Serial.print("/");
-					Serial.print(nextWatering);
+					Serial.print(nextWateringSeconds);
 					Serial.print("/");
-					Serial.print(digitalRead(pinLight) == HIGH ? "ON" : "OF" );
+					Serial.print(digitalRead(pinLight) == LOW ? "ON" : "OFF" );
 					Serial.println("");
 				}
 			}
@@ -209,18 +210,8 @@ void checkSensorsValues() {
 	longLightReading = analogRead(lightPin);
 
 	//Get Temperature and humidity values
-	DHT22_ERROR_t errorCode;
-	errorCode = myDHT22.readData();
-
-	if ( errorCode = DHT_ERROR_NONE)
-		longTempVal = myDHT22.getTemperatureC();
-		longHumiVal = myDHT22.getHumidity();
-
-	/* Other possible case: 
-		DHT_ERROR_CHECKSUM, DHT_BUS_HUNG, DHT_ERROR_NOT_PRESENT, DHT_ERROR_ACK_TOO_LONG
-		DHT_ERROR_SYNC_TIMEOUT, DHT_ERROR_DATA_TIMEOUT, DHT_ERROR_TOOQUICK
-		You can use a switch/case to define different action for each case. 
-		Actually, only DHT_ERROR_NONE is used in UrbanPotager */
+  longTempVal = dht.readTemperature();
+  longHumiVal = dht.readHumidity();
 
 	// Values to String
 	lightPercent = map(longLightReading, 0, 1023, 0, 100);
@@ -306,7 +297,8 @@ void manageLCDDisplay() {
 		lcd.setCursor(0, 0);
 		lcd.print(myTime+"    (");
 		lcd.write(byte(5));  // Water char
-		nextWatering = (lastWatering+delayWatering) - time;
+		nextWateringSeconds = (lastWatering+delayWatering) - time;
+		int nextWatering = nextWateringSeconds;
 		if (nextWatering >= 3600) {
 			nextWatering = nextWatering/3600;
 			lcd.print(String(nextWatering)+"h)    ");

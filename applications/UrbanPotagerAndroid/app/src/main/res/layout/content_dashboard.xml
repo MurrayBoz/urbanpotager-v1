@@ -119,6 +119,7 @@
 
                     <TextView
                         style="@style/text.accent"
+                        android:id="@+id/tv_nextWatering"
                         android:text="10mn"/>
                 </TableRow>
 
@@ -133,6 +134,7 @@
 
                     <TextView
                         style="@style/text.accent"
+                        android:id="@+id/tv_isLightOn"
                         android:text="ON"/>
                 </TableRow>
             </TableLayout>

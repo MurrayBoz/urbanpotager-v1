@@ -10,22 +10,27 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.ParcelUuid;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.urbanaplant.android.urbanpotager.MainActivity;
 import com.urbanaplant.android.urbanpotager.R;
+import com.urbanaplant.android.urbanpotager.fragments.FragmentMyPotager;
 import com.urbanaplant.android.urbanpotager.util.Tools;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by Tatiana Grange on 07/04/2015.
@@ -216,24 +221,60 @@ public class BluetoothService extends Service{
         @Override
         protected void onPostExecute(final Boolean result) {
             if(result && readBT != null){
-                if(MainActivity.active){
-                    Intent intent = new Intent(Protocol.BM_BLUETOOTH);
-                    intent.putExtra("datas", readBT);
-                    LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(intent);
-                    readBT = null;
-                }else {
-                    NotificationCompat.Builder builder =
-                            new NotificationCompat.Builder(getBaseContext())
-                                    .setSmallIcon(R.drawable.ic_notif)
-                                    .setContentTitle("Your UrbanPotager send you something...")
-                                    .setContentText(readBT);
-                    int NOTIFICATION_ID = 12345;
+                int index = readBT.indexOf("sla");
+                if (index != -1)
+                {
+                    String command = readBT.substring(index+3,readBT.length()-1);
+                    String commandType = command.substring(0,3);
 
-                    Intent targetIntent = new Intent(getBaseContext(), MainActivity.class);
-                    PendingIntent contentIntent = PendingIntent.getActivity(getBaseContext(), 0, targetIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                    builder.setContentIntent(contentIntent);
-                    NotificationManager nManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                    nManager.notify(NOTIFICATION_ID, builder.build());
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(BluetoothService.this);
+                    SharedPreferences.Editor edit = prefs.edit();
+
+                    if(commandType.equals("upd")){
+                        String commandDatas = command.substring(4,command.length()-1);
+
+                        //Save data in preferences
+                        String[] splitString = commandDatas.split("/");
+                        edit.putString("temperature",splitString[0] + "°C");
+                        edit.putString("humidity", splitString[1] + "%");
+                        edit.putString("light", splitString[2] + "%");
+                        int time = Integer.parseInt(splitString[3]);
+                        if (time > 60)
+                            edit.putString("nextWatering", time / 60 + "mn");
+                        else
+                            edit.putString("nextWatering", time + "s");
+                        edit.putString("isLightOn", splitString[4]);
+                        edit.putString("lastSync", "Last sync " + new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date()));
+
+                        edit.commit();
+
+                        //And notify application to change according to preferences
+                        if(MainActivity.active){
+                            Intent intent = new Intent(Protocol.BM_BLUETOOTH);
+                            intent.putExtra("type", Protocol.ProtoRead.UPDATE);
+                            LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(intent);
+                            readBT = null;
+                        }
+                    }else if(commandType.equals("not")){
+                        String subcommand = command.substring(3,6);
+                        if(subcommand.equals("lig")){
+                            //Save data in preferences
+                            edit.putString("light", readBT.substring(9,readBT.length()-1) + "%");
+                            edit.commit();
+
+                            //And notify application to change according to preferences
+                            if(MainActivity.active){
+                                Intent intent = new Intent(Protocol.BM_BLUETOOTH);
+                                intent.putExtra("type", Protocol.ProtoRead.NOTIF_LIGHT);
+                                LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(intent);
+                                readBT = null;
+                            }else{
+                                Tools.makeNotification(getBaseContext(),
+                                        "Highly fluctuating light",
+                                        "Change to " + readBT.substring(9,readBT.length()-1) + "%");
+                            }
+                        }
+                    }
                 }
             }
 

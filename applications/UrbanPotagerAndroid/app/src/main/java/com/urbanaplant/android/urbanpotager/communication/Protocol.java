@@ -19,4 +19,9 @@ public class Protocol {
         CLEAN_OFF,
         UPDATE_INFORMATIONS
     }
+
+    public enum ProtoRead{
+        UPDATE,
+        NOTIF_LIGHT
+    }
 }

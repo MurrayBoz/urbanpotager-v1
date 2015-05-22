@@ -33,9 +33,10 @@ int lightPin	= 1;
 int pinLight	= 8;
 int pinPump		= 9;
 
-/***** You can adjuste the values if you want *****/
+/***** You can adjuste this values if you want *****/
 unsigned long 	delaySensorReading	= 5;		// Sensor will be check each delaySensorReading seconds
 unsigned long 	durationWatering	= 20;
+unsigned long 	delaySendUpdate		= 60;
 unsigned long 	delayWatering		= 1200 ;	// 1200 = every 20 mn (in seconds)
 boolean			canUseLight			= false;
 boolean			canUsePump			= false;
@@ -71,12 +72,13 @@ long 			longLightReading	= 0;
 long 			longTempVal			= 0;
 long 			longHumiVal			= 0;
 unsigned long 	lastSensorReading	= 0;
+unsigned long 	lastUpdate			= 0;
 String 			detailledStatus1;	// Status ligne 1 (max 16 char)
 String 			detailledStatus2;	// Status ligne 2 (max 16 char)
 String 			lightVal;			//This is the value of Light sensor in String
 String 			tempVal;			//This is the value of Temperature sensor in String
 String 			humiVal;			//This is the value of Humidity sensor in String
-long 			lightPercent;
+long 			lightPercent		= 0;
 unsigned long 	currentTime;
 long 			time; 
 String 			myDate;
@@ -127,9 +129,25 @@ void loop() {
 	myTime += (now.minute() < 10) ?"0" : "";
 	myTime += String(now.minute());
 
+	//Get Light value
+	long backupLight = lightPercent;
+	longLightReading = analogRead(lightPin);
+	lightPercent = map(longLightReading, 0, 1023, 0, 100);
+	lightVal = doubleToString(lightPercent, 0);
+
+	//If difference between the two values are more than 20
+	//We have too inform phone
+	if(abs(backupLight - lightPercent) > 12){
+		Serial.println("slanotlig" + lightVal);
+	}
+
 	if (time > (lastSensorReading + delaySensorReading)) {
 		checkSensorsValues();  
 		lastSensorReading = time;
+	} 
+
+	if (time > (lastUpdate + delaySendUpdate)) {
+		updateInformations();  
 	} 
 
 	while (Serial.available()) {
@@ -177,17 +195,7 @@ void loop() {
 				}
 			}else{
 				if (newstring.substring(0,3) == "upd"){
-					Serial.print("slaupd/");
-					Serial.print(tempVal);
-					Serial.print("/");
-					Serial.print(humiVal);
-					Serial.print("/");
-					Serial.print(lightVal);
-					Serial.print("/");
-					Serial.print(nextWateringSeconds);
-					Serial.print("/");
-					Serial.print(digitalRead(pinLight) == LOW ? "ON" : "OFF" );
-					Serial.println("");
+					updateInformations();
 				}
 			}
 		}
@@ -206,17 +214,11 @@ void loop() {
  *  correct data to each sensors variables.
  */
 void checkSensorsValues() { 
-	//Get Light value
-	longLightReading = analogRead(lightPin);
-
 	//Get Temperature and humidity values
-  longTempVal = dht.readTemperature();
-  longHumiVal = dht.readHumidity();
+	longTempVal = dht.readTemperature();
+	longHumiVal = dht.readHumidity();
 
 	// Values to String
-	lightPercent = map(longLightReading, 0, 1023, 0, 100);
-
-	lightVal = doubleToString(lightPercent, 0);
 	tempVal = doubleToString(longTempVal, 0);
 	humiVal = doubleToString(longHumiVal, 0);  
 }
@@ -237,37 +239,35 @@ void manageDayLight() {
 	}
 }
 
+void updateInformations(){
+	Serial.print("slaupd/");
+	Serial.print(tempVal);
+	Serial.print("/");
+	Serial.print(humiVal);
+	Serial.print("/");
+	Serial.print(lightVal);
+	Serial.print("/");
+	Serial.print(nextWateringSeconds);
+	Serial.print("/");
+	Serial.print(digitalRead(pinLight) == LOW ? "ON" : "OFF" );
+	Serial.println("");
+	lastUpdate = time;
+}
+
 /**
  *  This function is used to make 
  *  pump work each delayWatering
  */
 void manageWatering() {  
 	if (canUsePump==true) {
-		// Serial.print("Pump ON (lastWatering=");
-		// Serial.print(lastWatering);
-		// Serial.print(" / time=");
-		// Serial.print(time);
-		// Serial.print(" / durationWatering=");
-		// Serial.print(durationWatering);
-		// Serial.println(")");
 		if (time > (lastWatering + durationWatering)) {
 			digitalWrite(pinPump,HIGH); // Turn OFF = HIGH (default)
 			canUsePump=false;
-			// Serial.print("Pump OFF (lastWatering=");
-			// Serial.print(lastWatering);
-			// Serial.print(" / time=");
-			// Serial.print(time);
-			// Serial.println(")");
 			lastWatering = time;
 		}
 	} else {
 		if (time > (lastWatering + delayWatering)) {
 			digitalWrite(pinPump,LOW); // Turn ON
-			// Serial.print("Pump ON (lastWatering=");
-			// Serial.print(lastWatering);
-			// Serial.print(" / time=");
-			// Serial.print(time);
-			// Serial.println(")");
 			lastWatering =time;
 			canUsePump=true;
 		}

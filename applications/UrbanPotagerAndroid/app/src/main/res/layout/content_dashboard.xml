@@ -17,6 +17,7 @@
         android:textSize="10sp"
         android:paddingLeft="16dp"
         android:layout_gravity="left"
+        android:id="@+id/tv_lastSync"
         android:text="Last sync 18/10/2014 12:35" />
 
     <FrameLayout

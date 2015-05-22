@@ -1,6 +1,8 @@
 package com.urbanaplant.android.urbanpotager.fragments;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import com.gc.materialdesign.views.ButtonFlat;
 import com.gc.materialdesign.views.ProgressBarDeterminate;
 import com.urbanaplant.android.urbanpotager.MainActivity;
 import com.urbanaplant.android.urbanpotager.R;
+import com.urbanaplant.android.urbanpotager.communication.BluetoothService;
 import com.urbanaplant.android.urbanpotager.communication.Protocol;
 import com.urbanaplant.android.urbanpotager.customViews.MyFragment;
 import com.urbanaplant.android.urbanpotager.listeners.OnFragmentInteractionListener;
@@ -30,6 +33,7 @@ public class FragmentMyPotager extends MyFragment implements View.OnClickListene
     private ButtonFlat btn_update;
     private TextView tv_nextWatering;
     private TextView tv_isLightOn;
+    private TextView tv_lastSync;
 
     /* **************************
          * 		Constructors		*
@@ -52,6 +56,7 @@ public class FragmentMyPotager extends MyFragment implements View.OnClickListene
         ProgressBarDeterminate pbd = (ProgressBarDeterminate) v.findViewById(R.id.waterLevel);
         pbd.setProgress(75);
 
+        tv_lastSync = (TextView) v.findViewById(R.id.tv_lastSync);
         tv_temperatureValue = (TextView) v.findViewById(R.id.tv_temperatureValue);
         tv_humidityValue = (TextView) v.findViewById(R.id.tv_humidityValue);
         tv_lightValue = (TextView) v.findViewById(R.id.tv_lightValue);
@@ -61,6 +66,8 @@ public class FragmentMyPotager extends MyFragment implements View.OnClickListene
 
         btn_update = (ButtonFlat) v.findViewById(R.id.btn_update);
         btn_update.setOnClickListener(this);
+
+        updateInformations();
 
         return v;
     }
@@ -72,17 +79,18 @@ public class FragmentMyPotager extends MyFragment implements View.OnClickListene
         }
     }
 
-    public void setDatas(String commandDatas) {
-        String[] splitString = commandDatas.split("/");
+    public void updateInformations() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        tv_lastSync.setText(prefs.getString("lastSync",""));
+        tv_temperatureValue.setText(prefs.getString("temperature","25°"));
+        tv_humidityValue.setText(prefs.getString("humidity","50%"));
+        tv_lightValue.setText(prefs.getString("light","75%°"));
+        tv_nextWatering.setText(prefs.getString("nextWatering","10mn"));
+        tv_isLightOn.setText(prefs.getString("isLightOn","ON"));
+    }
 
-        tv_temperatureValue.setText(splitString[0] + "°");
-        tv_humidityValue.setText(splitString[1] + "%");
-        tv_lightValue.setText(splitString[2] + "%");
-        int time = Integer.parseInt(splitString[3]);
-        if(time > 60)
-            tv_nextWatering.setText(time/60 + "mn");
-        else
-            tv_nextWatering.setText(time + "s");
-        tv_isLightOn.setText(splitString[4]);
+    public void updateLight() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        tv_lightValue.setText(prefs.getString("light","75%°"));
     }
 }

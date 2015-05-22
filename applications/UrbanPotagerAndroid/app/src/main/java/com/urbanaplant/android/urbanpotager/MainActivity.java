@@ -142,23 +142,15 @@ public class MainActivity extends MaterialNavigationDrawer implements
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String datas = intent.getStringExtra("datas");
-            if(datas != null) {
-                //Check if informations come from plant
-                int index = datas.indexOf("sla");
-                if (index != -1)
-                {
-                    String command = datas.substring(index+3,datas.length()-1);
-                    String commandType = command.substring(0,3);
-
-                    if(commandType.equals("upd")){
-                        String commandDatas = command.substring(4,command.length()-1);
-                        ((FragmentMyPotager)myPotager.getTargetFragment()).setDatas(commandDatas);
-                    }
-                }
-                else {
-                    datas = datas.substring(0, datas.length() - 1);
-                    Tools.toast(MainActivity.this, datas);
+            if(intent.hasExtra("type")) {
+                Protocol.ProtoRead result = (Protocol.ProtoRead) intent.getSerializableExtra("type");
+                switch (result){
+                    case UPDATE:
+                        ((FragmentMyPotager) myPotager.getTargetFragment()).updateInformations();
+                        break;
+                    case NOTIF_LIGHT:
+                        ((FragmentMyPotager) myPotager.getTargetFragment()).updateLight();
+                        break;
                 }
             }
         }

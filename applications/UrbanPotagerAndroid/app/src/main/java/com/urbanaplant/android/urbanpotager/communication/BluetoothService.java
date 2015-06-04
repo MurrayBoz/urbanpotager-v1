@@ -37,7 +37,7 @@ import java.util.Date;
  */
 public class BluetoothService extends Service{
     private final IBinder mBinder = new BluetoothBinder();
-    private String NAME = "HC-06";
+    private String NAME = "MyPotager";
     private BluetoothSocket mSocket;
     private BluetoothAdapter bluetoothAdapter;
     private java.util.UUID UUID;

@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.urbanaplant.android.urbanpotager.MainActivity;
+import com.urbanaplant.android.urbanpotager.MainActivityFrienly;
 import com.urbanaplant.android.urbanpotager.R;
 import com.urbanaplant.android.urbanpotager.communication.BluetoothService;
 import com.urbanaplant.android.urbanpotager.communication.Protocol;
@@ -83,8 +84,6 @@ public class LoadActivity extends ActionBarActivity {
     private void connect() {
         tv_state.setText("Connected to My Potager!");
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -93,7 +92,8 @@ public class LoadActivity extends ActionBarActivity {
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
                         tv_state.setText("");
-                        Intent mainIntent = new Intent(LoadActivity.this, MainActivity.class);
+                        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+                        Intent mainIntent = new Intent(LoadActivity.this, !preferences.getString("layout","1").equals("1") ?  MainActivity.class : MainActivityFrienly.class);
                         LoadActivity.this.startActivity(mainIntent);
                         LoadActivity.this.finish();
                     }

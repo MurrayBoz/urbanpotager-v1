@@ -9,7 +9,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 21
         versionCode 1
-        versionName "POC - Version 0.3"
+        versionName "POC - Version 0.4"
     }
     buildTypes {
         release {

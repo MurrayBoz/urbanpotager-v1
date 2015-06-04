@@ -58,10 +58,10 @@ public class MainActivity extends MaterialNavigationDrawer implements
         allowArrowAnimation();
 
         // add accounts
-        MaterialAccount account = new MaterialAccount(this.getResources(),"At Work","Water for 3 weeks",R.drawable.ic_home, R.drawable.wallpaper1);
+        MaterialAccount account = new MaterialAccount(this.getResources(),"At Home","Water for 3 weeks",R.drawable.ic_home, R.drawable.wallpaper7);
         this.addAccount(account);
 
-        MaterialAccount account2 = new MaterialAccount(this.getResources(),"At Home","Need water",R.drawable.ic_work,R.drawable.wallpaper3);
+        MaterialAccount account2 = new MaterialAccount(this.getResources(),"At Work","Need water",R.drawable.ic_work,R.drawable.wallpaper8);
         this.addAccount(account2);
 
         // set listener
@@ -71,7 +71,7 @@ public class MainActivity extends MaterialNavigationDrawer implements
         settings = newSection("Settings", R.drawable.ic_settings_black_24dp, FragmentSettings.newInstance(this));
         myPotager = newSection("Dashboard", R.drawable.ic_dashboard, FragmentMyPotager.newInstance(this));
         myPotager.setTitle("My Potager");
-        historic = newSection("Historic", R.drawable.ic_stats, FragmentHistoric.newInstance(this));
+        historic = newSection("History", R.drawable.ic_stats, FragmentHistoric.newInstance(this));
 
         this.addSection(myPotager);
         this.addSection(historic);
@@ -79,7 +79,7 @@ public class MainActivity extends MaterialNavigationDrawer implements
 
 
         // create bottom section
-        this.addBottomSection(newSection("App Settings (si besoin?)",R.drawable.ic_app_settings,new Intent(this,Settings.class)));
+        this.addBottomSection(newSection("App Settings",R.drawable.ic_app_settings,new Intent(this,Settings.class)));
     }
 
     @Override

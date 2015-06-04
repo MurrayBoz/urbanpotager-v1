@@ -60,7 +60,7 @@ public class FragmentSettings extends MyFragment implements View.OnClickListener
         cardMaintenance = new Card(context);
         CardHeader header = new CustomHeaderSwitch(context,this);
         cardMaintenance.addCardHeader(header);
-        cardMaintenance.setTitle("Le mode maintenance vous permet de controller votre UrbanPotager en direct.");
+        cardMaintenance.setTitle("Maintenance Mode allows you to control manually your UrbanPotager.");
         CardExpand expand = new CustomExpandCardMaintenance(context);
         ((CustomExpandCardMaintenance)expand).setListener(this);
         cardMaintenance.addCardExpand(expand);

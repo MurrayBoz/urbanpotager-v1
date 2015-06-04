@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.gc.materialdesign.views.ProgressBarDeterminate;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
@@ -26,6 +25,7 @@ import com.urbanaplant.android.urbanpotager.customViews.MyFragment;
 import com.urbanaplant.android.urbanpotager.listeners.OnFragmentInteractionListener;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by Tatiana Grange on 17/02/2015.
@@ -33,18 +33,10 @@ import java.util.ArrayList;
 public class FragmentHistoric extends MyFragment implements OnChartValueSelectedListener {
 
     private LineChart mChart;
-    private int year = 15;
-    Handler mHandler = new Handler();
+    private int year = 14;
 
     protected String[] mMonths = new String[] {
-            "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"
-    };
-
-    protected String[] mParties = new String[] {
-            "Party A", "Party B", "Party C", "Party D", "Party E", "Party F", "Party G", "Party H",
-            "Party I", "Party J", "Party K", "Party L", "Party M", "Party N", "Party O", "Party P",
-            "Party Q", "Party R", "Party S", "Party T", "Party U", "Party V", "Party W", "Party X",
-            "Party Y", "Party Z"
+            "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr"
     };
 
     /* **************************
@@ -95,10 +87,8 @@ public class FragmentHistoric extends MyFragment implements OnChartValueSelected
         // get the legend (only possible after setting data)
         Legend l = mChart.getLegend();
 
-        // modify the legend ...
-        // l.setPosition(LegendPosition.LEFT_OF_CHART);
-        l.setForm(Legend.LegendForm.LINE);
         l.setTextColor(Color.BLACK);
+        l.setForm(Legend.LegendForm.SQUARE);
 
         XAxis xl = mChart.getXAxis();
         xl.setTextColor(Color.BLACK);
@@ -107,30 +97,22 @@ public class FragmentHistoric extends MyFragment implements OnChartValueSelected
 
         YAxis leftAxis = mChart.getAxisLeft();
         leftAxis.setTextColor(Color.BLACK);
-        leftAxis.setAxisMaxValue(120f);
+        leftAxis.setAxisMaxValue(30f);
+        leftAxis.setAxisMinValue(5f);
+        leftAxis.setStartAtZero(false);
         leftAxis.setDrawGridLines(true);
 
         YAxis rightAxis = mChart.getAxisRight();
         rightAxis.setEnabled(false);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    try {
-                        Thread.sleep(2000);
-                        mHandler.post(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                addEntry();
-                            }
-                        });
-                    } catch (Exception e) {
-                    }
-                }
+        int end = 0;
+        while (end <= 12) {
+            try {
+                addEntry();
+                end++;
+            } catch (Exception e) {
             }
-        }).start();
+        }
 
         return v;
     }
@@ -152,7 +134,8 @@ public class FragmentHistoric extends MyFragment implements OnChartValueSelected
             // add a new x-value first
             data.addXValue(mMonths[data.getXValCount() % 12] + " "
                     + (year + data.getXValCount() / 12));
-            data.addEntry(new Entry((float) (Math.random() * 40) + 40f, set.getEntryCount()), 0);
+
+            data.addEntry(new Entry(randomInRange(15,27), set.getEntryCount()), 0);
 
             // let the chart know it's data has changed
             mChart.notifyDataSetChanged();
@@ -173,9 +156,13 @@ public class FragmentHistoric extends MyFragment implements OnChartValueSelected
         }
     }
 
+    public float randomInRange(int min, int max) {
+        return (float) (Math.random() < 0.5 ? ((1-Math.random()) * (max-min) + min) : (Math.random() * (max-min) + min));
+    }
+
     private LineDataSet createSet() {
 
-        LineDataSet set = new LineDataSet(null, "Dynamic Data");
+        LineDataSet set = new LineDataSet(null, "Average temperatures.");
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
         set.setColor(ColorTemplate.getHoloBlue());
         set.setCircleColor(ColorTemplate.getHoloBlue());

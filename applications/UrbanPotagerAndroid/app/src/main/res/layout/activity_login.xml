@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Username or Email address"
-            android:text="My login"
+            android:text="contact@urbanaplant.com"
             android:textSize="15sp"
             app:met_baseColor="#000000"
             app:met_floatingLabel="highlight"
@@ -62,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:background="@drawable/bg_input"
-                    android:text="Inscription"/>
+                    android:text="Register"/>
             </com.andexert.library.RippleView>
 
             <com.andexert.library.RippleView
@@ -79,7 +79,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:background="@color/colorPrimary"
-                    android:text="Connexion"/>
+                    android:text="Connect"/>
             </com.andexert.library.RippleView>
         </LinearLayout>
 

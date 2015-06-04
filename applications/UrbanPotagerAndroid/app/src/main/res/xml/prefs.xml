@@ -59,6 +59,7 @@
     <PreferenceCategory android:title="Other">
         <ListPreference
             android:title="Layout"
+            android:key="layout"
             android:entries="@array/layouts"
             android:entryValues="@array/layouts_values"
             />

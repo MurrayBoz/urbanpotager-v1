@@ -1,0 +1,87 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context="com.urbanaplant.android.urbanpotager.MainActivityFrienly">
+
+    <TextView
+        android:layout_margin="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="@color/primaryTextColor"
+        android:text="Last Trophy"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/friendly_last"/>
+
+
+    <LinearLayout
+        android:layout_margin="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:textSize="12dp"
+            android:textColor="@color/secondTextColor"
+            android:layout_marginRight="30dp"
+            android:layout_marginLeft="30dp"
+            android:drawableTop="@drawable/friendly_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:text="Garden State"
+            android:textAllCaps="false"/>
+
+        <Button
+            android:textSize="12dp"
+            android:textColor="@color/secondTextColor"
+            android:layout_marginRight="30dp"
+            android:layout_marginLeft="30dp"
+            android:drawableTop="@drawable/friendly_trophy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:text="My Trophy"
+            android:textAllCaps="false"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:textSize="12dp"
+            android:textColor="@color/secondTextColor"
+            android:layout_marginRight="30dp"
+            android:layout_marginLeft="30dp"
+            android:drawableTop="@drawable/friendly_settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:text="Garden Settings"
+            android:textAllCaps="false"/>
+
+        <Button
+            android:textSize="12dp"
+            android:textColor="@color/secondTextColor"
+            android:layout_marginRight="30dp"
+            android:layout_marginLeft="30dp"
+            android:drawableTop="@drawable/friendly_change"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:text="Other Garden"
+            android:textAllCaps="false"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

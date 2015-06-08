@@ -36,7 +36,7 @@ int pinPump		= 9;
 /***** You can adjuste this values if you want *****/
 unsigned long 	delaySensorReading	= 5;		// Sensor will be check each delaySensorReading seconds
 unsigned long 	durationWatering	= 20;
-unsigned long 	delaySendUpdate		= 60;
+unsigned long 	delaySendUpdate		= 30;
 unsigned long 	delayWatering		= 1200 ;	// 1200 = every 20 mn (in seconds)
 boolean			canUseLight			= false;
 boolean			canUsePump			= false;
@@ -178,8 +178,11 @@ void loop() {
 			if (newstring.substring(0,3) == "man"){
 				if (isOnOrOff == "of")
 					isManage = false;
-				else
+				else{
 					isManage = true;
+					digitalWrite(pinPump, HIGH);
+					digitalWrite(pinLight, HIGH);
+				}       
 			}else if(isManage){
 				String action = newstring.substring(0,3);
 				if (action == "pum"){

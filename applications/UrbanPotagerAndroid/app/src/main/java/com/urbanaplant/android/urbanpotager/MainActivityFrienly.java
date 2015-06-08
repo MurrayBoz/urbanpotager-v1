@@ -36,10 +36,21 @@ public class MainActivityFrienly extends ActionBarActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
-            this.startActivity(new Intent(this,Settings.class));
+            this.startActivityForResult(new Intent(this,Settings.class),Tools.SETTINGS_REQUEST_CODE);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == Tools.SETTINGS_REQUEST_CODE && resultCode == Tools.SETTINGS_RESULT_QUIT){
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+            Intent mainIntent = new Intent(MainActivityFrienly.this, !preferences.getString("layout","1").equals("1") ?  MainActivity.class : MainActivityFrienly.class);
+            MainActivityFrienly.this.startActivity(mainIntent);
+            MainActivityFrienly.this.finish();
+        }
     }
 }

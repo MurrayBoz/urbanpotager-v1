@@ -32,9 +32,9 @@ public class Settings extends ActionBarActivity {
         SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
                 if(key.equals("layout")){
-                    Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage( getBaseContext().getPackageName() );
-                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(i);
+                    /*Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage( getBaseContext().getPackageName() );
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);*/
+                    endActivity();
                 }
             }
         };
@@ -48,5 +48,11 @@ public class Settings extends ActionBarActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.prefs);
         }
+    }
+
+    public void endActivity(){
+        Intent intent = this.getIntent();
+        this.setResult(Tools.SETTINGS_RESULT_QUIT, intent);
+        finish();
     }
 }

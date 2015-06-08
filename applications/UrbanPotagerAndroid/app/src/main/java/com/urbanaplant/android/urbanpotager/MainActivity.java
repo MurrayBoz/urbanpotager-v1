@@ -6,9 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,6 +18,7 @@ import android.view.View;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
+import com.urbanaplant.android.urbanpotager.activities.LoadActivity;
 import com.urbanaplant.android.urbanpotager.activities.Settings;
 import com.urbanaplant.android.urbanpotager.communication.BluetoothService;
 import com.urbanaplant.android.urbanpotager.communication.Protocol;
@@ -42,6 +45,7 @@ public class MainActivity extends MaterialNavigationDrawer implements
     private MaterialSection settings;
     private MaterialSection myPotager;
     private MaterialSection historic;
+    private MaterialSection appSettings;
     private final int btn_notif = 100;
 
     @Override
@@ -79,7 +83,27 @@ public class MainActivity extends MaterialNavigationDrawer implements
 
 
         // create bottom section
-        this.addBottomSection(newSection("App Settings",R.drawable.ic_app_settings,new Intent(this,Settings.class)));
+        appSettings = newSection("App Settings",R.drawable.ic_app_settings,this);
+        this.addBottomSection(appSettings);
+    }
+
+    @Override
+    public void onClick(MaterialSection section) {
+        super.onClick(section);
+        if(section == appSettings){
+            startActivityForResult(new Intent(this,Settings.class),Tools.SETTINGS_REQUEST_CODE);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == Tools.SETTINGS_REQUEST_CODE && resultCode == Tools.SETTINGS_RESULT_QUIT){
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+            Intent mainIntent = new Intent(MainActivity.this, !preferences.getString("layout","1").equals("1") ?  MainActivity.class : MainActivityFrienly.class);
+            MainActivity.this.startActivity(mainIntent);
+            MainActivity.this.finish();
+        }
     }
 
     @Override
@@ -146,12 +170,17 @@ public class MainActivity extends MaterialNavigationDrawer implements
                 Protocol.ProtoRead result = (Protocol.ProtoRead) intent.getSerializableExtra("type");
                 switch (result){
                     case UPDATE:
-                        ((FragmentMyPotager) myPotager.getTargetFragment()).updateInformations();
+                        if(getCurrentSection() == myPotager)
+                            ((FragmentMyPotager) myPotager.getTargetFragment()).updateInformations();
                         break;
                     case NOTIF_LIGHT:
-                        ((FragmentMyPotager) myPotager.getTargetFragment()).updateLight();
+                        if(getCurrentSection() == myPotager)
+                            ((FragmentMyPotager) myPotager.getTargetFragment()).updateLight();
                         break;
                 }
+            }
+            if(intent.hasExtra("state")){
+                write(Protocol.ProtoWrite.UPDATE_INFORMATIONS);
             }
         }
     };
@@ -161,12 +190,10 @@ public class MainActivity extends MaterialNavigationDrawer implements
     private ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder service) {
             mBoundService = ((BluetoothService.BluetoothBinder)service).getService();
-            Tools.log("up");
         }
 
         public void onServiceDisconnected(ComponentName className) {
             mBoundService = null;
-            Tools.log("down");
         }
     };
 
@@ -189,11 +216,4 @@ public class MainActivity extends MaterialNavigationDrawer implements
         mIsBound = true;
     }
 
-    void doUnbindService() {
-        if (mIsBound) {
-            // Detach our existing connection.
-            unbindService(mConnection);
-            mIsBound = false;
-        }
-    }
 }

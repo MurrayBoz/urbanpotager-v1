@@ -37,7 +37,8 @@ import java.util.Date;
  */
 public class BluetoothService extends Service{
     private final IBinder mBinder = new BluetoothBinder();
-    private String NAME = "MyPotager";
+    //private String NAME = "MyPotager";
+    private String NAME = "HC-06";
     private BluetoothSocket mSocket;
     private BluetoothAdapter bluetoothAdapter;
     private java.util.UUID UUID;
@@ -180,6 +181,7 @@ public class BluetoothService extends Service{
             ct.execute();
         }
     }
+
     private class ConnectTask extends AsyncTask<Void, Integer, Boolean> {
         @Override
         protected void onPreExecute() {

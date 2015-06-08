@@ -22,6 +22,8 @@ import com.urbanaplant.android.urbanpotager.R;
  */
 public class Tools {
 
+    public static final int SETTINGS_REQUEST_CODE = 42;
+    public static final int SETTINGS_RESULT_QUIT = 4242;
     public static boolean isDev = true;
 
     /**

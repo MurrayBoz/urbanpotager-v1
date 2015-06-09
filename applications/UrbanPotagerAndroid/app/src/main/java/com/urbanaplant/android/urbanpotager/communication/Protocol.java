@@ -17,7 +17,15 @@ public class Protocol {
         PUMP_OFF,
         CLEAN_ON,
         CLEAN_OFF,
-        UPDATE_INFORMATIONS
+        UPDATE_INFORMATIONS,
+    }
+
+    public enum ProtoWriteSet{
+        TIME_SUNSET,
+        TIME_SUNRISE,
+        WATERING,
+        MAX_TEMP,
+        MIN_TEMP
     }
 
     public enum ProtoRead{

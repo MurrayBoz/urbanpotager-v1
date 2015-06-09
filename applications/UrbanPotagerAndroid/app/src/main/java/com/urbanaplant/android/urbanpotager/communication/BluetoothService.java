@@ -80,6 +80,38 @@ public class BluetoothService extends Service{
     }
 
 
+    public void writeSet(Protocol.ProtoWriteSet set, String s) throws IOException{
+        if (outputStream != null){
+            String toSend = "masset";
+            switch (set) {
+                case TIME_SUNSET:
+                    toSend += "set";
+                    break;
+                case TIME_SUNRISE:
+                    toSend += "ris";
+                    break;
+                case MAX_TEMP:
+                    //toSend += "max";
+                    toSend = null;
+                    break;
+                case MIN_TEMP:
+                    //toSend += "min";
+                    toSend = null;
+                    break;
+                case WATERING:
+                    toSend += "wat";
+                    break;
+            }
+            if(toSend != null) {
+                toSend += s;
+                outputStream.write(toSend.getBytes());
+            }else{
+                Tools.toast(this, "Work in progress");
+            }
+        }
+
+    }
+
     public void write(Protocol.ProtoWrite s) throws IOException {
 
         if (outputStream != null){

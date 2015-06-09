@@ -2,8 +2,10 @@ package com.urbanaplant.android.urbanpotager.fragments;
 
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,14 +79,35 @@ public class FragmentSettings extends MyFragment implements View.OnClickListener
         CardViewNative cardView2 = (CardViewNative) v.findViewById(R.id.card_settings);
         cardView2.setCard(cardSettings);
 
+
+
         return v;
+    }
+
+    @Override
+    public void onViewCreated(View v, Bundle savedInstanceState) {
+        super.onViewCreated(v, savedInstanceState);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+        int hour = preferences.getInt("sunriseHour",8);
+        int minute = preferences.getInt("sunriseMin",0);
+        ((EditText)v.findViewById(R.id.et_sunrise)).setText(String.format("%02d", hour) + ":" + String.format("%02d", minute));
+
+        hour = preferences.getInt("sunsetHour",22);
+        minute = preferences.getInt("sunsetMin",0);
+        ((EditText)v.findViewById(R.id.et_sunset)).setText(String.format("%02d", hour) + ":" + String.format("%02d", minute));
+
+        String[] array = getResources().getStringArray(R.array.items);
+        int which = preferences.getInt("watering", 0);
+        ((EditText)v.findViewById(R.id.et_watering)).setText(array[which]);
     }
 
     @Override
     public void onClick(final View v) {
         if(cardSettings.isHourField(v)) {
-            int hour = v.getId() == R.id.et_sunrise ? 8 : 22;
-            int minute = 00;
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            int hour = v.getId() == R.id.et_sunrise ? preferences.getInt("sunriseHour",8) : preferences.getInt("sunsetHour",22);
+            int minute = v.getId() == R.id.et_sunrise ? preferences.getInt("sunriseMin",0) : preferences.getInt("sunsetMin",0);
 
             TimePickerDialog mTimePicker;
             mTimePicker = new TimePickerDialog(
@@ -93,6 +116,14 @@ public class FragmentSettings extends MyFragment implements View.OnClickListener
                         @Override
                         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                             ((EditText) v).setText(String.format("%02d", hourOfDay) + ":" + String.format("%02d", minute));
+
+                            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                            SharedPreferences.Editor editor = preferences.edit();
+                            String s = ((EditText) v).getText().toString();
+                            editor.putInt(v.getId() == R.id.et_sunrise ? "sunriseHour" : "sunsetHour", hourOfDay);
+                            editor.putInt(v.getId() == R.id.et_sunrise ? "sunriseMin" : "sunsetMin", minute);
+                            editor.commit();
+                            ((MainActivity)getActivity()).writeSet(v.getId() == R.id.et_sunrise ? Protocol.ProtoWriteSet.TIME_SUNRISE : Protocol.ProtoWriteSet.TIME_SUNSET, s);
                         }
                     },
                     hour,
@@ -108,16 +139,41 @@ public class FragmentSettings extends MyFragment implements View.OnClickListener
                         @Override
                         public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
                             ((EditText)v).setText(text);
+
+                            String toSend = null;
+                            switch (which){
+                                case 0:
+                                    toSend = "10/10";
+                                    break;
+                                case 1:
+                                    toSend = "20/10";
+                                    break;
+                                case 2:
+                                    toSend = "10/20";
+                                    break;
+                                case 3:
+                                    toSend = "20/20";
+                                    break;
+                            }
+
+                            if(toSend != null) {
+                                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                                SharedPreferences.Editor editor = preferences.edit();
+                                editor.putInt("watering", which);
+                                editor.commit();
+                                ((MainActivity) getActivity()).writeSet(Protocol.ProtoWriteSet.WATERING, toSend);
+                            }
                         }
                     })
                     .positiveText("Ok")
                     .show();
+        }else{
+            Tools.toast(getActivity(), "Work in progress");
         }
     }
 
     @Override
     public void onCheck(boolean b) {
-        Tools.toast(getActivity(),b + "");
         if(b) {
             cardMaintenance.doExpand();
             new Handler().postDelayed(new Runnable() {

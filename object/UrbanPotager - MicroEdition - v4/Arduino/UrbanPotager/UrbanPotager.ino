@@ -40,8 +40,10 @@ unsigned long 	delaySendUpdate		= 30;
 unsigned long 	delayWatering		= 1200 ;	// 1200 = every 20 mn (in seconds)
 boolean			canUseLight			= false;
 boolean			canUsePump			= false;
-int				startLight			= 7;		// Start light at <hour> (8 => led on at 7:00AM)
-int 			endLight			= 21;		// Heure de FIN lumière (22 => led of 09:00PM)
+int 			startLightHour			= 8;		// Start light at <hour> (8 => led on at 7:00AM)
+int 			endLightHour			= 21;		// Heure de FIN lumière (22 => led of 09:00PM)
+int 			startLightMin			= 0;		// Start light at <hour> (8 => led on at 7:00AM)
+int 			endLightMin			= 0;		// Heure de FIN lumière (22 => led of 09:00PM)
 int 			lightMinValue		= 90;
 
 /*****                    Screen                      *****/
@@ -171,34 +173,73 @@ void loop() {
 	}
 
 	if (readString.length() >0) {
-		// Only get master order
+
 		if (readString.substring(0,3) == "mas") {
-			String newstring = readString.substring(3);
-			String isOnOrOff = newstring.substring(3);
-			if (newstring.substring(0,3) == "man"){
-				if (isOnOrOff == "of")
+			String command = readString.substring(3);
+			String instruction = command.substring(0,3);
+			String action = command.substring(3);
+			if (instruction == "man"){
+				if (action == "of"){
+					lcd.clear();
 					isManage = false;
+				}
 				else{
 					isManage = true;
 					digitalWrite(pinPump, HIGH);
 					digitalWrite(pinLight, HIGH);
 				}       
+			}else if(instruction == "set"){
+				String subCommand = action.substring(0,3);  
+				String datas = action.substring(3);
+				lcd.clear();
+				lcd.setCursor(0,0);
+
+				if(subCommand == "set"){
+					endLightHour = datas.substring(0,2).toInt();
+					endLightMin = datas.substring(3,5).toInt();
+					lcd.print("Change Sunset to");
+					lcd.setCursor(0,1);
+					lcd.print("     " + datas + "      ");
+				}else if(subCommand == "ris"){
+					startLightHour = datas.substring(0,2).toInt();
+					startLightMin = datas.substring(3,5).toInt();
+					lcd.print("Change Sunrise");
+					lcd.setCursor(0,1);
+					lcd.print("to : " + datas + "      ");
+				}else if(subCommand == "max"){
+					lcd.print("Work in progress");
+				}else if(subCommand == "min"){
+					lcd.print("Work in progress");
+				}else if(subCommand == "wat"){
+					int slashIndex = datas.indexOf('/');
+					delayWatering = datas.substring(0, slashIndex).toInt() * 60;
+					durationWatering = datas.substring(slashIndex+1).toInt();
+					String s = "Each ";
+					s += delayWatering/60;
+					s += " min";
+					lcd.print(s);
+					lcd.setCursor(0,1);
+					s = "During ";
+					s += durationWatering;
+					s += " min";
+					lcd.print(s);
+				}
+				delay(3000);
+				lcd.clear();
+			}else if (instruction == "upd"){
+				updateInformations();
 			}else if(isManage){
-				String action = newstring.substring(0,3);
-				if (action == "pum"){
-					digitalWrite(pinPump, (isOnOrOff == "of") ? HIGH : LOW);
-				}else if(action == "lig"){
-					digitalWrite(pinLight, (isOnOrOff == "of") ? HIGH : LOW);
-				}else if(action == "cle"){
-					isCleaning = (isOnOrOff == "on");
+				String actionMain = command.substring(0,3);
+				if (actionMain == "pum"){
+					digitalWrite(pinPump, (action == "of") ? HIGH : LOW);
+				}else if(actionMain == "lig"){
+					digitalWrite(pinLight, (action == "of") ? HIGH : LOW);
+				}else if(actionMain == "cle"){
+					isCleaning = (action == "on");
 					if(isCleaning){
 						digitalWrite(pinPump, HIGH);
 						digitalWrite(pinLight, HIGH);
 					}
-				}
-			}else{
-				if (newstring.substring(0,3) == "upd"){
-					updateInformations();
 				}
 			}
 		}
@@ -233,9 +274,16 @@ void checkSensorsValues() {
 void manageDayLight() { 
 	DateTime now = RTC.now();
 	int myHour = now.hour(); 
-	if ((myHour >= startLight ) && (myHour < endLight)) { 
-		canUseLight = !(lightPercent>=90);
-		digitalWrite(pinLight, canUseLight ? LOW : HIGH);
+	int myMin = now.minute();
+	if ((myHour >= startLightHour ) && (myHour < endLightHour + 1)) { 
+		if((myHour == startLightHour && myMin < startLightMin) || (myHour == endLightHour && myMin >= endLightMin)){
+			digitalWrite(pinLight,HIGH); // Turn OFF = HIGH (default)
+			canUseLight=false;
+		}else{
+			canUseLight = !(lightPercent>=90);
+			digitalWrite(pinLight, canUseLight ? LOW : HIGH);
+		}
+		
 	} else {
 		digitalWrite(pinLight,HIGH); // Turn OFF = HIGH (default)
 		canUseLight=false;
@@ -361,6 +409,7 @@ void manageLCDDisplay() {
 	lcd.print("  ");
 	lcd.write(byte(5));
 	delay(3000) ;
+	lcd.clear();
  }
 
 ////////////////////////////////////////////
@@ -384,3 +433,12 @@ String doubleToString(double input,int decimalPlaces)
 		return String((int)input);
 	}
 }
+
+
+
+
+
+
+
+
+

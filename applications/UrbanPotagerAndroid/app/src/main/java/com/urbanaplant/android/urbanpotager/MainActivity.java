@@ -224,4 +224,18 @@ public class MainActivity extends MaterialNavigationDrawer implements
         }, 400);
     }
 
+    public void writeSet(final Protocol.ProtoWriteSet protoWriteSet,final String s) {
+        bindService(new Intent(getBaseContext(),
+                BluetoothService.class), mConnection, Context.BIND_AUTO_CREATE);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    mBoundService.writeSet(protoWriteSet,s);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 400);
+    }
 }

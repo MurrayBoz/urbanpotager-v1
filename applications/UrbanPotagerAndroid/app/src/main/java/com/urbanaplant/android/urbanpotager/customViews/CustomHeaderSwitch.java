@@ -15,7 +15,9 @@ import it.gmariotti.cardslib.library.internal.CardHeader;
  */
 public class CustomHeaderSwitch extends CardHeader {
 
-    Switch.OnCheckListener checkListener;
+    private Switch.OnCheckListener checkListener;
+
+    private Switch swicth;
 
     public CustomHeaderSwitch(Context context) {
         super(context, R.layout.card_header_swicth);
@@ -34,11 +36,9 @@ public class CustomHeaderSwitch extends CardHeader {
             if (t2!=null)
                 t2.setText("Maintenance Mode");
 
-            Switch s = (Switch) view.findViewById(R.id.switchView);
-            if(s != null)
-                s.setOncheckListener(checkListener);
+            swicth = (Switch) view.findViewById(R.id.switchView);
+            if(swicth != null)
+                swicth.setOncheckListener(checkListener);
         }
     }
-
-
 }

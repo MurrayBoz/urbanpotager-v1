@@ -24,6 +24,7 @@ import com.urbanaplant.android.urbanpotager.customViews.CustomHeaderSwitch;
 import com.urbanaplant.android.urbanpotager.customViews.MyFragment;
 import com.urbanaplant.android.urbanpotager.listeners.OnCheckManageSettings;
 import com.urbanaplant.android.urbanpotager.listeners.OnFragmentInteractionListener;
+import com.urbanaplant.android.urbanpotager.util.Tools;
 
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardExpand;
@@ -36,6 +37,7 @@ public class FragmentSettings extends MyFragment implements View.OnClickListener
 
     private Card cardMaintenance;
     private CustomCardSettings cardSettings;
+    private CustomHeaderSwitch header;
 
     /* **************************
      * 		Constructors		*
@@ -58,7 +60,7 @@ public class FragmentSettings extends MyFragment implements View.OnClickListener
 
         Context context = getActivity().getBaseContext();
         cardMaintenance = new Card(context);
-        CardHeader header = new CustomHeaderSwitch(context,this);
+        header = new CustomHeaderSwitch(context,this);
         cardMaintenance.addCardHeader(header);
         cardMaintenance.setTitle("Maintenance Mode allows you to control manually your UrbanPotager.");
         CardExpand expand = new CustomExpandCardMaintenance(context);
@@ -77,7 +79,6 @@ public class FragmentSettings extends MyFragment implements View.OnClickListener
 
         return v;
     }
-
 
     @Override
     public void onClick(final View v) {
@@ -116,9 +117,9 @@ public class FragmentSettings extends MyFragment implements View.OnClickListener
 
     @Override
     public void onCheck(boolean b) {
-        cardMaintenance.doToogleExpand();
-
+        Tools.toast(getActivity(),b + "");
         if(b) {
+            cardMaintenance.doExpand();
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -127,6 +128,8 @@ public class FragmentSettings extends MyFragment implements View.OnClickListener
                 }
             }, 400);
         }
+        else
+            cardMaintenance.doCollapse();
 
         ((MainActivity)getActivity()).write(b ? Protocol.ProtoWrite.MANAGE_MODE_ON : Protocol.ProtoWrite.MANAGE_MODE_OFF);
     }
@@ -145,5 +148,4 @@ public class FragmentSettings extends MyFragment implements View.OnClickListener
     public void onCheckClean(boolean isCheck) {
         ((MainActivity)getActivity()).write(isCheck ? Protocol.ProtoWrite.CLEAN_ON : Protocol.ProtoWrite.CLEAN_OFF);
     }
-
 }

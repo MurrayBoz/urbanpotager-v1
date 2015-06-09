@@ -149,6 +149,16 @@ public class MainActivity extends MaterialNavigationDrawer implements
         active = true;
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,new IntentFilter(Protocol.BM_BLUETOOTH));
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(getCurrentSection() == settings)
+            write(Protocol.ProtoWrite.MANAGE_MODE_OFF);
+
+        active = false;
+    }
+
     @Override
     protected void onStop() {
         active = false;
@@ -158,8 +168,8 @@ public class MainActivity extends MaterialNavigationDrawer implements
 
     @Override
     protected void onDestroy() {
+        active = false;
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
-//        doUnbindService();
         super.onDestroy();
     }
 
@@ -179,7 +189,7 @@ public class MainActivity extends MaterialNavigationDrawer implements
                         break;
                 }
             }
-            if(intent.hasExtra("state")){
+            if(intent.hasExtra("state") && active){
                 write(Protocol.ProtoWrite.UPDATE_INFORMATIONS);
             }
         }
@@ -190,14 +200,14 @@ public class MainActivity extends MaterialNavigationDrawer implements
     private ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder service) {
             mBoundService = ((BluetoothService.BluetoothBinder)service).getService();
+            Tools.toast(MainActivity.this,"Connected");
         }
 
         public void onServiceDisconnected(ComponentName className) {
             mBoundService = null;
+            Tools.toast(MainActivity.this,"Disconnected");
         }
     };
-
-    private boolean mIsBound = false;
 
     public void write(final Protocol.ProtoWrite writeMode) {
         bindService(new Intent(getBaseContext(),
@@ -212,8 +222,6 @@ public class MainActivity extends MaterialNavigationDrawer implements
                 }
             }
         }, 400);
-
-        mIsBound = true;
     }
 
 }

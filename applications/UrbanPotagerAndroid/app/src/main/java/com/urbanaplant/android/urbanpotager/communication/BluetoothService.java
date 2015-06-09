@@ -1,7 +1,5 @@
 package com.urbanaplant.android.urbanpotager.communication;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -17,12 +15,9 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.ParcelUuid;
 import android.preference.PreferenceManager;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.urbanaplant.android.urbanpotager.MainActivity;
-import com.urbanaplant.android.urbanpotager.R;
-import com.urbanaplant.android.urbanpotager.fragments.FragmentMyPotager;
 import com.urbanaplant.android.urbanpotager.util.Tools;
 
 import java.io.IOException;

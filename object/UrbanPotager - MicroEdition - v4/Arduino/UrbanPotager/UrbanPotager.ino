@@ -22,16 +22,18 @@ Last Update By : Tatiana
 /***** Arduino's Lib *****/
 #include <Wire.h>
 
+bool isShield 	= false;
+
 
 //////////////////////////////////////////////////////
 //                  Declarations                    //
 //////////////////////////////////////////////////////
 
 /***** You can adjuste the pins if you want *****/
-int tempPin		= 7;
-int lightPin	= 1;
-int pinLight	= 8;
-int pinPump		= 9;
+int tempPin		= isShield ? 13 : 7;
+int lightPin	= isShield ? 0 : 1;
+int pinLight	= isShield ? 10 : 8;
+int pinPump		= isShield ? 9 : 9;
 
 /***** You can adjuste this values if you want *****/
 unsigned long 	delaySensorReading	= 5;		// Sensor will be check each delaySensorReading seconds
@@ -40,9 +42,9 @@ unsigned long 	delaySendUpdate		= 30;
 unsigned long 	delayWatering		= 1200 ;	// 1200 = every 20 mn (in seconds)
 boolean			canUseLight			= false;
 boolean			canUsePump			= false;
-int 			startLightHour			= 8;		// Start light at <hour> (8 => led on at 7:00AM)
-int 			endLightHour			= 21;		// Heure de FIN lumière (22 => led of 09:00PM)
-int 			startLightMin			= 0;		// Start light at <hour> (8 => led on at 7:00AM)
+int 			startLightHour		= 8;		// Start light at <hour> (8 => led on at 7:00AM)
+int 			endLightHour		= 21;		// Heure de FIN lumière (22 => led of 09:00PM)
+int 			startLightMin		= 0;		// Start light at <hour> (8 => led on at 7:00AM)
 int 			endLightMin			= 0;		// Heure de FIN lumière (22 => led of 09:00PM)
 int 			lightMinValue		= 90;
 
@@ -134,7 +136,7 @@ void loop() {
 	//Get Light value
 	long backupLight = lightPercent;
 	longLightReading = analogRead(lightPin);
-	lightPercent = map(longLightReading, 0, 1023, 0, 100);
+	lightPercent = isShield ? map(longLightReading, 0, 1023, 100, 0) : map(longLightReading, 0, 1023, 0, 100);
 	lightVal = doubleToString(lightPercent, 0);
 
 	//If difference between the two values are more than 20
@@ -433,6 +435,7 @@ String doubleToString(double input,int decimalPlaces)
 		return String((int)input);
 	}
 }
+
 
 
 

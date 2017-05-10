@@ -1,4 +1,4 @@
-# UrbanPotager
+# UrbanPotager v1.0
 UrbanPotager - Smart Indoor Kitchen Garden Project
 
 ##Concept
@@ -18,7 +18,6 @@ Collaborative: Open-Source / Open-Hardware / Scalable / Educational
 And more to come!
 
 ##Documentation
-Please check the [wiki page](https://github.com/MurrayBoz/urbanpotager/wiki)! And give us some feedback!
+Please check the [wiki page](https://github.com/MurrayBoz/urbanpotager/wiki)! and give us some feedback! (French only)
 
-
-Visit us for more details: <http://doc.faclab.org/projets/urban-potager-micro-edition/>
+Visit the FacLab website for additional details: <http://doc.faclab.org/projets/urban-potager-micro-edition/>
